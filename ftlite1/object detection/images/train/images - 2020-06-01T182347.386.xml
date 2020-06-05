@@ -1,0 +1,26 @@
+<annotation>
+	<folder>train</folder>
+	<filename>images - 2020-06-01T182347.386.jpg</filename>
+	<path>C:\tensorflow1\models\research\object_detection\images\train\images - 2020-06-01T182347.386.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>275</width>
+		<height>183</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>tennis_ball</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>236</xmin>
+			<ymin>77</ymin>
+			<xmax>263</xmax>
+			<ymax>102</ymax>
+		</bndbox>
+	</object>
+</annotation>
