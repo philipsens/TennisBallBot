@@ -1,0 +1,4 @@
+beacontools==1.3.1
+construct==2.9.52
+pkg-resources==0.0.0
+PyBluez==0.23
