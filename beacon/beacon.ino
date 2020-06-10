@@ -4,18 +4,16 @@
 #include "esp_sleep.h"
 #include "soc/soc.h"
 #include "soc/rtc_cntl_reg.h"
-
-// #define BEACON_UUID "98374d0a-fa8f-43ab-968b-88eaf83c3713"
-#define BEACON_UUID "00000000-0000-0000-0000-000000000000"
+#include "resources.h"
 
 BLEAdvertising *ble_advertising;
 
 void create_beacon() {
     BLEBeacon beacon = BLEBeacon();
     beacon.setManufacturerId(0x4C00); // Fake Apple manufacturer id
-    beacon.setProximityUUID(BLEUUID(BEACON_UUID));
-    beacon.setMajor(0);
-    beacon.setMinor(0);
+    beacon.setProximityUUID(BLEUUID(resource_uuid));
+    beacon.setMajor(resource_major);
+    beacon.setMinor(resource_minor);
     beacon.setSignalPower(0xC1);
 
     BLEAdvertisementData advertisement_data = BLEAdvertisementData();
