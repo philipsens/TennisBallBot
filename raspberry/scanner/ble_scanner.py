@@ -1,6 +1,7 @@
 import time
 from typing import Tuple
 from beacontools import BeaconScanner, IBeaconFilter
+import scanner
 
 class BLEBeacon:
     position = None
@@ -47,7 +48,6 @@ class BLEScanner:
         if (additional_info["major"] > len(self.beacons)):
             print("Out of bound beacon", file=sys.stderr)
             return
-        print("%s" % packet)
 
         beacon = self.beacons[int(additional_info["major"])]
         distance = (10 ** ((packet.tx_power - rssi) / (10 * 2))) * 10
@@ -60,5 +60,4 @@ class BLEScanner:
         self.scanner.start()
 
     def stop(self) -> None:
-        if (selfscanner == None): return
         self.scanner.stop()
