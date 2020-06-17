@@ -129,14 +129,24 @@ class Detection:
     boxes: []
     class_id: int
     score: float
+    width: float
+    position: float
 
     def __init__(self, boxes, class_id, score):
         self.boxes = boxes
         self.class_id = class_id
         self.score = score
+        self.width, self.position = self.get_width_and_position(boxes)
 
-    def print(self):
-        return self.boxes, self.class_id, self.score
+    @staticmethod
+    def get_width_and_position(boxes):
+        xmin = boxes[1]
+        xmax = boxes[3]
+
+        width = (xmax - xmin)
+        position = xmin + (width / 2)
+
+        return width, position
 
 
 class ObjectDetector:
@@ -174,7 +184,7 @@ class ObjectDetector:
 
     def update(self, callback):
         while self.running:
-            self.frame_rate.reset()
+            # self.frame_rate.reset()
 
             frame = self.video_stream.read().copy()
             self.model.create_input_data_from_frame(frame)
@@ -188,8 +198,8 @@ class ObjectDetector:
             elif detections:
                 print(detections)
 
-            self.frame_rate.calculate()
-            print(self.frame_rate.frame_rate_calculation)
+            # self.frame_rate.calculate()
+            # print(self.frame_rate.frame_rate_calculation)
 
         self.video_stream.stop()
 
@@ -204,4 +214,8 @@ class ObjectDetector:
         self.running = False
 
 
-ObjectDetector().start(lambda d: print(d[0].print()))
+def get_nearest_detection(detections):
+    print(max(detections, key=lambda detection: detection.width).position)
+
+
+ObjectDetector().start(get_nearest_detection)
