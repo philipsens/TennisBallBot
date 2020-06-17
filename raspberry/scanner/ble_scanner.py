@@ -9,6 +9,9 @@ class BLEBeacon:
     index = 0
     max_len = 0
 
+    def calculate_distance(rssi: int, tx_power: int) -> float:
+        return (10 ** ((tx_power - rssi) / (10 * 2))) * 10
+
     def __init__(self, max_len: int, position: Tuple[int, int]) -> None:
         # Preallocate the array for faster inserts
         self.results = max_len * [0]
@@ -49,12 +52,25 @@ class BLEScanner:
             print("Out of bound beacon", file=sys.stderr)
             return
 
-        beacon = self.beacons[int(additional_info["major"])]
-        distance = (10 ** ((packet.tx_power - rssi) / (10 * 2))) * 10
+        major = int(additional_info["major"])
+
+        beacon = self.beacons[major]
+        distance = BLEBeacon.calculate_distance(rssi, packet.tx_power)
         beacon.push(distance)
 
-        print("distance: %f" % distance)
-        print("avg: %f" % beacon.avg())
+        print("[BLEScanner] beacon: %d, distance: %f, avg: %f" % (major, distance, beacon.avg()))
+    
+    def cart_position(self) -> Tuple[float, float]:
+        top_horizontal  = (self.beacons[0].avg() + -self.beacons[1].avg()) / 10
+        bot_horizontal  = (self.beacons[2].avg() + -self.beacons[3].avg()) / 10
+
+        left_vertical   = (self.beacons[0].avg() + -self.beacons[2].avg()) / 10
+        right_vertical  = (self.beacons[1].avg() + -self.beacons[3].avg()) / 10
+
+        horizontal  = (top_horizontal + bot_horizontal) / 2
+        vertical    = (left_vertical + right_vertical) / 2
+
+        return (horizontal, vertical)
 
     def start(self) -> None:
         self.scanner.start()
