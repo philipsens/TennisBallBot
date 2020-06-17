@@ -174,7 +174,7 @@ class ObjectDetector:
 
     def update(self, callback):
         while self.running:
-            self.frame_rate.reset()
+            # self.frame_rate.reset()
 
             frame = self.video_stream.read().copy()
             self.model.create_input_data_from_frame(frame)
@@ -188,8 +188,8 @@ class ObjectDetector:
             elif detections:
                 print(detections)
 
-            self.frame_rate.calculate()
-            print(self.frame_rate.frame_rate_calculation)
+            # self.frame_rate.calculate()
+            # print(self.frame_rate.frame_rate_calculation)
 
         self.video_stream.stop()
 
@@ -204,4 +204,17 @@ class ObjectDetector:
         self.running = False
 
 
-ObjectDetector().start(lambda d: print(d[0].print()))
+def get_width_and_position(detections):
+    for detection in detections:
+        ymin = detection.boxes[0]
+        xmin = detection.boxes[1]
+        ymax = detection.boxes[2]
+        xmax = detection.boxes[3]
+
+        width = (xmax - xmin)
+        position = xmin + (width / 2)
+
+        print((width, position))
+
+
+ObjectDetector().start(get_width_and_position)
