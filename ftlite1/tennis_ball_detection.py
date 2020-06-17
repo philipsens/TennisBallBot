@@ -132,12 +132,21 @@ class Detection:
     width: float
     position: float
 
-    def __init__(self, boxes, class_id, score, width, position):
+    def __init__(self, boxes, class_id, score):
         self.boxes = boxes
         self.class_id = class_id
         self.score = score
-        self.width = width
-        self.position = position
+        self.width, self.position = self.get_width_and_position(boxes)
+
+    @staticmethod
+    def get_width_and_position(boxes):
+        xmin = boxes[1]
+        xmax = boxes[3]
+
+        width = (xmax - xmin)
+        position = xmin + (width / 2)
+
+        return width, position
 
 
 class ObjectDetector:
@@ -198,22 +207,11 @@ class ObjectDetector:
         detections = []
         for i in range(len(scores)):
             if (scores[i] > self.MIN_CONFIDENCE_THRESHOLD) and (scores[i] <= 1.0):
-                width, position = self.get_width_and_position(boxes[i])
-                detections.append(Detection(boxes[i], classes[i], scores[i], width, position))
+                detections.append(Detection(boxes[i], classes[i], scores[i]))
         return detections
 
     def stop(self):
         self.running = False
-
-    @staticmethod
-    def get_width_and_position(boxes):
-        xmin = boxes[1]
-        xmax = boxes[3]
-
-        width = (xmax - xmin)
-        position = xmin + (width / 2)
-
-        return width, position
 
 
 def get_nearest_detection(detections):
