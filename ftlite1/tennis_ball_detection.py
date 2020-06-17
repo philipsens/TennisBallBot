@@ -129,14 +129,15 @@ class Detection:
     boxes: []
     class_id: int
     score: float
+    width: float
+    position: float
 
-    def __init__(self, boxes, class_id, score):
+    def __init__(self, boxes, class_id, score, width, position):
         self.boxes = boxes
         self.class_id = class_id
         self.score = score
-
-    def print(self):
-        return self.boxes, self.class_id, self.score
+        self.width = width
+        self.position = position
 
 
 class ObjectDetector:
@@ -197,24 +198,26 @@ class ObjectDetector:
         detections = []
         for i in range(len(scores)):
             if (scores[i] > self.MIN_CONFIDENCE_THRESHOLD) and (scores[i] <= 1.0):
-                detections.append(Detection(boxes[i], classes[i], scores[i]))
+                width, position = self.get_width_and_position(boxes[i])
+                detections.append(Detection(boxes[i], classes[i], scores[i], width, position))
         return detections
 
     def stop(self):
         self.running = False
 
-
-def get_width_and_position(detections):
-    for detection in detections:
-        ymin = detection.boxes[0]
-        xmin = detection.boxes[1]
-        ymax = detection.boxes[2]
-        xmax = detection.boxes[3]
+    @staticmethod
+    def get_width_and_position(boxes):
+        xmin = boxes[1]
+        xmax = boxes[3]
 
         width = (xmax - xmin)
         position = xmin + (width / 2)
 
-        print((width, position))
+        return width, position
 
 
-ObjectDetector().start(get_width_and_position)
+def get_nearest_detection(detections):
+    print(max(detections, key=lambda detection: detection.width).position)
+
+
+ObjectDetector().start(get_nearest_detection)
