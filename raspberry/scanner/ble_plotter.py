@@ -35,8 +35,8 @@ class BLEPlotter(threading.Thread):
     def clear(self) -> None:
         self.axes.clear()
 
-        self.axes.set_xlim(-10, 10)
-        self.axes.set_ylim(-10, 10)
+        self.axes.set_xlim(-100, 100)
+        self.axes.set_ylim(-100, 100)
 
         plt.grid()
 
@@ -51,15 +51,15 @@ class BLEPlotter(threading.Thread):
         for beacon in self.scanner.beacons:
             x = beacon.position[0]
             y = beacon.position[1]
-            radius = plt.Circart_positioncle((x, y), beacon.avg() / 10, color="#20fcc1", alpha=0.5)
-            marker = plt.Circle((x, y), 0.5, color="#ff0000")
+            radius = plt.Circle((x, y), beacon.avg(), color="#20fcc1", alpha=0.5)
+            marker = plt.Circle((x, y), 5, color="#ff0000")
 
             self.axes.add_artist(radius)
             self.axes.add_artist(marker)
 
         # Cart position
         (x, y) = self.scanner.cart_position()
-        center = plt.Circle((x, y), .25, color="#000000")
+        center = plt.Circle((x, y), 5, color="#000000")
         self.axes.add_artist(center)
 
         print("[BLEPlotter] New frame...")
