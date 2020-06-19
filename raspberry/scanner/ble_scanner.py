@@ -71,7 +71,7 @@ class BLEScanner:
         accuracy = BLEBeacon.calculate_accuracy(rssi, packet.tx_power)
         beacon.push(distance)
 
-        print("[BLEScanner] beacon: %d, distance: %f, accuracy: %f, avg: %f" % (major, distance, accuracy, beacon.avg()))
+        # print("[BLEScanner] beacon: %d, distance: %f, accuracy: %f, avg: %f" % (major, distance, accuracy, beacon.avg()))
     
     def cart_position(self) -> Tuple[float, float]:
 
@@ -100,28 +100,38 @@ class BLEScanner:
         space_left_vertical  = distance_vertical - (self.beacons[0].avg() + self.beacons[2].avg())
         space_right_vertical = distance_vertical - (self.beacons[1].avg() + self.beacons[3].avg())
 
-        # Very inaccurate but can be used to estimate the accurate beacon
-        avg_horizontal  = (min_top_horizontal + space_top_horizontal / 2) + (min_bot_horizontal + space_bot_horizontal / 2) / 2
-        avg_vertical    = (min_left_vertical + space_left_vertical / 2) + (min_right_vertical + space_right_vertical / 2)
-        
-        print(avg_horizontal, avg_vertical)
+        # Find the closest average distance of the 2 beacons
+        # and use those are more "accurate" beacons
+        top_avg_distance = self.beacons[0].avg() + self.beacons[1].avg()
+        bot_avg_distance = self.beacons[2].avg() + self.beacons[3].avg() 
+
+        left_avg_distance  = self.beacons[0].avg() + self.beacons[2].avg()
+        right_avg_distance = self.beacons[1].avg() + self.beacons[3].avg()
 
         vertical, vertical_radius = (0, 0)
 
         # if true, take the right side beacons, else the left
-        if avg_horizontal > center_horizontal:
+        if right_avg_distance < left_avg_distance:
+            print("use right")
+
             vertical_radius = space_right_vertical / 2
             vertical = min_right_vertical + vertical_radius
         else: 
+            print("use left")
+
             vertical_radius = space_left_vertical / 2
             vertical = min_left_vertical + vertical_radius
 
         horizontal, horizontal_radius = (0, 0)
 
-        if avg_vertical > center_vertical:
+        if top_avg_distance < bot_avg_distance:
+            print("use top")
+
             horizontal_radius = space_top_horizontal / 2
             horizontal = min_top_horizontal + horizontal_radius
         else:
+            print("use bot")
+
             horizontal_radius = space_bot_horizontal / 2
             horizontal = min_bot_horizontal + horizontal_radius
         
