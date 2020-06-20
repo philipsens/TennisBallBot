@@ -131,3 +131,16 @@ main {
 .zone.collection.selected {
     border: none;
 }
+
+@media only screen and (min-width: 450px) {
+    main {
+        width: 360px;
+    }
+
+    .zone-selector {
+        display: grid;
+        grid-template-columns: 60px 200px 60px;
+        grid-template-rows: 60px 140px 140px 60px;
+        grid-gap: 20px;
+    }
+}
