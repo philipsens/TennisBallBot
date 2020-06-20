@@ -8,7 +8,7 @@ const zoneURI = baseURI + 'zone';
 
 export default function ZoneSelector({collectionMode}) {
     const [selectedCollection, setSelectedCollection] = useState(0);
-    const [selectedZone, setSelectedZone] = useState(-1);
+    const [selectedZone, setSelectedZone] = useState(1);
     const zones = [...new Array(12)].map((_, i) => ({
         middle: i === 4 || i === 7,
         corner: i === 0 || i === 2 || i === 9 || i === 11,
@@ -18,18 +18,18 @@ export default function ZoneSelector({collectionMode}) {
     useEffect(() => {
         fetch(collectionURI)
             .then(response => response.json())
-            .then(data => setSelectedCollection(data[0].id))
+            .then(data => setSelectedCollection(data))
 
         fetch(zoneURI)
             .then(response => response.json())
-            .then(data => setSelectedZone(data[0].id))
+            .then(data => setSelectedZone(data))
     }, [])
 
     useEffect(() => {
         fetch(collectionURI, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({id: selectedCollection})
+            body: JSON.stringify({collection: selectedCollection})
         })
             .catch(error => console.log(error))
     }, [selectedCollection])
@@ -38,7 +38,7 @@ export default function ZoneSelector({collectionMode}) {
         fetch(zoneURI, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({id: setSelectedZone})
+            body: JSON.stringify({zone: selectedZone})
         })
             .catch(error => console.log(error))
     }, [selectedZone])

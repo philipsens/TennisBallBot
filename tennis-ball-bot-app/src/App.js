@@ -6,16 +6,25 @@ import ZoneSelector from "./components/ZoneSelector";
 import {CollectionMode} from "./CollectionMode";
 
 const baseURI = process.env.REACT_APP_API_URL;
-const collectionModeURI = baseURI + 'collectionMode';
+const collectionModeURI = baseURI + 'collection_mode';
 
 function App() {
-    const [collectionMode, setCollectionMode] = useState(CollectionMode.ZONE)
+    const [collectionMode, setCollectionMode] = useState(CollectionMode.DISABLED)
 
     useEffect(() => {
         fetch( collectionModeURI)
             .then(response => response.json())
-            .then(data => setCollectionMode(data[0].collectionMode))
+            .then(data => setCollectionMode(data))
     }, [])
+
+    useEffect(() => {
+        fetch(collectionModeURI, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({collectionMode: collectionMode})
+        })
+            .catch(error => console.log(error))
+    }, [collectionMode])
 
     return (
         <div className="App">
