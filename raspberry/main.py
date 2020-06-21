@@ -10,11 +10,11 @@ if __name__ == '__main__':
 
     zumo = Zumo("/dev/ttyACM1")
     scanner = BLEScanner("00000000-0000-0000-0000-000000000000")
-    # plotter = BLEPlotter(scanner)
+    plotter = BLEPlotter(scanner)
 
     try:
         zumo.start()
-        # plotter.start()
+        plotter.start()
         scanner.start()
 
         zumo.add("left", 0) # max value = 400
@@ -26,5 +26,5 @@ if __name__ == '__main__':
 
     except KeyboardInterrupt:
         zumo.stop()
-        # plotter.stop()
+        plotter.stop()
         scanner.stop()
