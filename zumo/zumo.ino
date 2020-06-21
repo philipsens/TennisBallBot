@@ -1,3 +1,5 @@
+#include <ZumoShield.h>
+
 #include "SerialManager.h"
 #include "ZumoMotor.h"
 
@@ -10,11 +12,23 @@ void processToken(const char* identifier, const char* value) {
         int16_t speed = atoi(value);
 
         motor.leftTrack(speed);
+
+        Serial.print("left=");
+        Serial.println(speed);
     } else
     if (strcmp(identifier, "right") == 0) {
         int16_t speed = atoi(value);
 
         motor.rightTrack(speed);
+
+        Serial.print("right=");
+        Serial.println(speed);
+    } else
+    if (strcmp(identifier, "honk") == 0) {
+        ZumoBuzzer buzzer;
+        buzzer.playNote(3 + 5 * 12, 250, 15);
+
+        Serial.println("honk");
     }
 
 }
@@ -22,8 +36,8 @@ void processToken(const char* identifier, const char* value) {
 void processLine(char* line) {
     const char* delimiter = "=";
 
-    const char* identifier = strtok(line, delimiter);
-    const char* value = strtok(NULL, delimiter);
+    const char* identifier  = strtok_r(line, delimiter, &line);
+    const char* value       = strtok_r(line, delimiter, &line);
 
     processToken(identifier, value);
 }
@@ -32,15 +46,9 @@ void callback(char* buffer) {
     const char* delimiter = ";";
     char* token;
 
-    token = strtok(buffer, delimiter);
-
-
-    while (token != NULL) {
+    while ((token = strtok_r(buffer, delimiter, &buffer))) {
         processLine(token);
-
-        token = strtok(NULL, delimiter);
     }
-
 }
 
 void setup() {
