@@ -8,19 +8,23 @@ if __name__ == '__main__':
 
     queue = MainThreadQueue()
 
+    zumo = Zumo("/dev/ttyACM1")
     scanner = BLEScanner("00000000-0000-0000-0000-000000000000")
-    plotter = BLEPlotter(scanner)
-    # zumo = Zumo()
+    # plotter = BLEPlotter(scanner)
 
     try:
-        plotter.start()
+        zumo.start()
+        # plotter.start()
         scanner.start()
-        # zumo.start()
+
+        zumo.add("left", 0) # max value = 400
+        zumo.add("right", 0) # max value = 400
+        zumo.add("honk", 0) # value is ignored
 
         while True:
             queue.execute()
 
     except KeyboardInterrupt:
-        plotter.stop()
+        zumo.stop()
+        # plotter.stop()
         scanner.stop()
-        # zumo.stop()
