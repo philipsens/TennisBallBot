@@ -133,7 +133,7 @@ main {
 }
 
 @media only screen and (min-width: 450px) {
-    main {
+    main, .header {
         width: 360px;
     }
 
