@@ -2,11 +2,10 @@ import threading
 import time
 import random
 
-
 import pygame
 import scanner
 
-class BLEPlotter(threading.Thread):
+class Plotter(threading.Thread):
     scanner = None
     stop_thread = False
 

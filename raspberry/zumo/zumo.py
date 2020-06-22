@@ -14,7 +14,7 @@ class Zumo(threading.Thread):
         threading.Thread.__init__(self)
         self.serial_connection = serial.Serial(port, 115200)
 
-    def add(self, identifier: str, value: int) -> None:
+    def add(self, identifier: str, value: int = 0) -> None:
         self.queue.put((identifier, value))
 
     def run(self):
@@ -48,5 +48,3 @@ class Zumo(threading.Thread):
         self.stop_thread = True
         self.join()
         self.serial_connection.close()
-
-    
