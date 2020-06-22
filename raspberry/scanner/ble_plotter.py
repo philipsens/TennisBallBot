@@ -2,18 +2,27 @@ import threading
 import time
 import random
 
-import matplotlib
-matplotlib.use('GTK3Agg')
-import matplotlib.pyplot as plt
-import matplotlib.animation as animation
+
+import pygame
 import scanner
 
 class BLEPlotter(threading.Thread):
     scanner = None
     stop_thread = False
 
-    figure = None
-    axes = None
+    screen = None
+
+    # screen dimensions are 500px x 500px
+    screen_dimensions = (500, 500)
+    # Field is 150cm x 150cm
+    field = (150, 150)
+
+    # pixel ratio
+    ratio = None
+    ratio_x = None
+    ratio_y = None
+
+    center = None
 
     def __init__(self, scanner):
         threading.Thread.__init__(self)
@@ -28,43 +37,48 @@ class BLEPlotter(threading.Thread):
             self.render()
 
     def setup(self) -> None:
-        self.figure = plt.figure(figsize=(8,8), dpi=72)
-        self.axes = plt.subplot(aspect='equal')
-        self.axes.set_title('Beacon positions')
+        pygame.init()
+        self.screen = pygame.display.set_mode(self.screen_dimensions, 0, 32)
+        pygame.display.set_caption("Plotter")
+
+        self.ratio = self.ratio_x, self.ratio_y = (self.screen_dimensions[0] / self.field[0], self.screen_dimensions[1] / self.field[1])
+        self.center = (self.screen_dimensions[0] // 2, self.screen_dimensions[1] // 2)
     
     def clear(self) -> None:
-        self.axes.clear()
-
-        self.axes.set_xlim(-10, 10)
-        self.axes.set_ylim(-10, 10)
-
-        plt.grid()
-
+        self.screen.fill((255, 255, 255))
 
     def render(self) -> None:
-        # Rendering this is still very slow
-        # It might be possible to change this to a blip way of rendering
-        # I tried it once, but wasnt quite succesful
-
         self.clear()
 
         for beacon in self.scanner.beacons:
-            x = beacon.position[0]
-            y = beacon.position[1]
-            radius = plt.Circart_positioncle((x, y), beacon.avg() / 10, color="#20fcc1", alpha=0.5)
-            marker = plt.Circle((x, y), 0.5, color="#ff0000")
+            x = (self.center[0] + int(beacon.position[0] * self.ratio_x))
+            y = (self.center[1] - int(beacon.position[1] * self.ratio_y))
 
-            self.axes.add_artist(radius)
-            self.axes.add_artist(marker)
+            # radius
+            surface = pygame.Surface(self.screen_dimensions)
+            surface.set_colorkey((0,0,0))
+            surface.set_alpha(128)
 
-        # Cart position
-        (x, y) = self.scanner.cart_position()
-        center = plt.Circle((x, y), .25, color="#000000")
-        self.axes.add_artist(center)
+            pygame.draw.circle(surface, (0, 0, 255), (x, y), int(beacon.avg() * self.ratio_x))
 
-        print("[BLEPlotter] New frame...")
-        plt.pause(.0001)
+            self.screen.blit(surface, (0, 0))
 
+            # beacon
+            pygame.draw.circle(self.screen, (255, 0, 0), (x, y), int(5 * self.ratio_x))
+
+        (cart_x, cart_y) = self.scanner.cart_position()
+        x = self.center[0] + int(cart_x * self.ratio_x)
+        y = self.center[1] - int(cart_y * self.ratio_y)
+        
+        pygame.draw.circle(self.screen, (0, 0, 0), (x, y), int(5 * self.ratio_x))
+
+        pygame.display.update()
+
+        time.sleep(0.25)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.stop_thread = True
 
     def stop(self):
         self.stop_thread = True
