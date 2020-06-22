@@ -8,7 +8,7 @@ if __name__ == '__main__':
 
     queue = MainThreadQueue()
 
-    zumo = Zumo("/dev/ttyACM1")
+    zumo = Zumo("/dev/ttyACM0")
     scanner = BLEScanner("00000000-0000-0000-0000-000000000000")
     plotter = BLEPlotter(scanner)
 

@@ -51,8 +51,8 @@ class BLEPlotter(threading.Thread):
         self.clear()
 
         for beacon in self.scanner.beacons:
-            x = self.center[0] + int(beacon.position[0] * self.ratio_x)
-            y = self.center[1] + int(beacon.position[1] * self.ratio_y)
+            x = (self.center[0] + int(beacon.position[0] * self.ratio_x))
+            y = (self.center[1] - int(beacon.position[1] * self.ratio_y))
 
             # radius
             surface = pygame.Surface(self.screen_dimensions)
@@ -68,7 +68,7 @@ class BLEPlotter(threading.Thread):
 
         (cart_x, cart_y) = self.scanner.cart_position()
         x = self.center[0] + int(cart_x * self.ratio_x)
-        y = self.center[1] + int(cart_y * self.ratio_y)
+        y = self.center[1] - int(cart_y * self.ratio_y)
         
         pygame.draw.circle(self.screen, (0, 0, 0), (x, y), int(5 * self.ratio_x))
 
