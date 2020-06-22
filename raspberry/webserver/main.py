@@ -1,24 +1,40 @@
-from flask import Flask, json, request
+import os
+
+from flask import Flask, json, request, send_from_directory
 from flask_cors import CORS
 
-api = Flask(__name__)
-CORS(api)
+
+app = Flask(__name__, static_folder='webapp/build')
+CORS(app)
 
 COLLECTION_MODE_ZONE = 0
 COLLECTION_MODE_DISABLED = 1
 COLLECTION_MODE_ALL = 2
 
-BASE_URI = '/api/'
-ZONE_URI = BASE_URI + 'zone'
-COLLECTION_URI = BASE_URI + 'collection'
-COLLECTION_MODE_URI = BASE_URI + 'collection_mode'
+API_URI = '/api/'
+ZONE_URI = API_URI + 'zone'
+COLLECTION_URI = API_URI + 'collection'
+COLLECTION_MODE_URI = API_URI + 'collection_mode'
 
 zone = 1
 collection = 0
 collection_mode = COLLECTION_MODE_ZONE
 
 
-@api.route(ZONE_URI, methods=['GET', 'POST'])
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve(path):
+    if path_to_file_exists(path):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
+
+
+def path_to_file_exists(path):
+    path != "" and os.path.exists(app.static_folder + '/' + path)
+
+
+@app.route(ZONE_URI, methods=['GET', 'POST'])
 def handle_zone():
     global zone
     if is_post(request):
@@ -26,7 +42,7 @@ def handle_zone():
     return json.dumps(zone)
 
 
-@api.route(COLLECTION_URI, methods=['GET', 'POST'])
+@app.route(COLLECTION_URI, methods=['GET', 'POST'])
 def handle_collection():
     global collection
     if is_post(request):
@@ -34,7 +50,7 @@ def handle_collection():
     return json.dumps(collection)
 
 
-@api.route(COLLECTION_MODE_URI, methods=['GET', 'POST'])
+@app.route(COLLECTION_MODE_URI, methods=['GET', 'POST'])
 def handle_mode():
     global collection_mode
     if is_post(request):
@@ -47,4 +63,4 @@ def is_post(req):
 
 
 if __name__ == '__main__':
-    api.run()
+    app.run()
