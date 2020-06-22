@@ -1,7 +1,8 @@
-import cv2
-from importlib import import_module
 import importlib.util
-import os
+from importlib import import_module
+
+import cv2
+import numpy as np
 
 
 class Model:
@@ -75,4 +76,3 @@ class Model:
         classes = self.interpreter.get_tensor(self.output_details[1]['index'])[0]
         scores = self.interpreter.get_tensor(self.output_details[2]['index'])[0]
         return boxes, classes, scores
-

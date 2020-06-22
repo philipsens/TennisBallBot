@@ -1,7 +1,10 @@
-import video_stream
-import model
-import detection
-import frame_rate
+import os
+import time
+
+from Detection import Detection
+from FrameRate import FrameRate
+from Model import Model
+from VideoStream import VideoStream
 
 
 class ObjectDetector:
@@ -67,7 +70,3 @@ class ObjectDetector:
 
     def stop(self):
         self.running = False
-
-
-def get_nearest_detection(detections):
-    print(max(detections, key=lambda detection: detection.width).position)
