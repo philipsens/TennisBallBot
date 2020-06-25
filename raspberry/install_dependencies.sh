@@ -9,7 +9,13 @@ sudo apt-get -y install libedgetpu1-std
 
 # Install npm
 
-sudo apt-get install npm
+sudo apt-get -y install npm
+
+# Beacons
+
+sudo apt-get -y install libbluetooth-dev
+sudo apt-get -y install python3-dev libbluetooth-dev libcap2-bin
+sudo setcap 'cap_net_raw,cap_net_admin+eip' $(readlink -f $(which python3))
 
 # Get packages required for OpenCV
 
@@ -24,7 +30,7 @@ pip3 install -r requirements.txt
 
 # Get packages required for TensorFlow
 
-version=$(python -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')
+version=$(python3 -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')
 
 if [ $version == "3.7" ]; then
 pip3 install https://dl.google.com/coral/python/tflite_runtime-2.1.0.post1-cp37-cp37m-linux_armv7l.whl
