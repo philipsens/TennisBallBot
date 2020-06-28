@@ -17,7 +17,7 @@ sudo apt full-upgrade
 
 * Change workdir to the webapp folder `cd raspberry/webserver/webapp`.
 
-* Create an envoroment file `cp .env.example .env.local`.
+* Create an environment file `cp .env.example .env.local`.
 
 * Fill in the api uri, this should be the ip of the raspberry pi + `/api/` note the railing slash.
 
