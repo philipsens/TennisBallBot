@@ -22,7 +22,8 @@ class VideoStream:
         self.stream.release()
 
     def read(self):
-        return self.frame
+        flipped_frame = cv2.flip(self.frame, flipCode=-1)
+        return flipped_frame
 
     def stop(self):
         self.running = False
