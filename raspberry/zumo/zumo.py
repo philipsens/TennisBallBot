@@ -3,6 +3,18 @@ import serial
 import time
 from queue import Queue
 
+'''
+The commands accepted by the Zumo are the following
+
+Command Range       Time in ms
+------------------------------
+move    [-400, 400] yes
+left    [-400, 400] yes
+right   [-400, 400] yes
+honk    -           no
+delay   -           yes
+
+'''
 class Zumo(threading.Thread):
 
     queue = Queue()
@@ -14,8 +26,8 @@ class Zumo(threading.Thread):
         threading.Thread.__init__(self)
         self.serial_connection = serial.Serial(port, 115200)
 
-    def add(self, identifier: str, value: int = 0) -> None:
-        self.queue.put((identifier, value))
+    def add(self, identifier: str, value: int = 0, time: int = 0) -> None:
+        self.queue.put((identifier, value, time))
 
     def run(self):
         if (not self.serial_connection.is_open):
@@ -37,9 +49,9 @@ class Zumo(threading.Thread):
         messages = []
 
         while not self.queue.empty():
-            identifier, value = self.queue.get()
+            identifier, value, time = self.queue.get()
 
-            message = identifier + "=" + str(value)
+            message = identifier + "=" + str(value) + "=" + str(time)
             messages.append(message)
 
         return ';'.join(messages) + "\r\n"
