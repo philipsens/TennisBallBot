@@ -19,6 +19,6 @@ sudo apt full-upgrade
 
 * Create an environment file `cp .env.example .env.local`.
 
-* Fill in the api uri, this should be the ip of the raspberry pi + `/api/` note the railing slash.
+* Fill in the api uri, this should be the ip of the `http://` + raspberry pi + `/api/` note the trailing slash.
 
 * Execute `npm install && npm run build`.
