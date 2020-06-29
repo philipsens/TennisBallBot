@@ -1,19 +1,21 @@
 from typing import Tuple
 
+
 class BLEBeacon:
     position: Tuple[int, int]
     results: []
     index = 0
     max_len = 0
 
+    @staticmethod
     def calculate_distance(rssi: int, tx_power: int) -> float:
         return (10 ** ((tx_power - rssi) / (10 * 1.75))) * 10
 
-
+    @staticmethod
     def calculate_accuracy(rssi: int, tx_power: int) -> float:
-        if (rssi == 0):
+        if rssi == 0:
             return -1
-        
+
         ratio = rssi / tx_power
 
         if ratio < 1:

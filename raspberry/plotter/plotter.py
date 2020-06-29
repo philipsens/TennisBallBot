@@ -1,9 +1,8 @@
 import threading
 import time
-import random
 
 import pygame
-import scanner
+
 
 class Plotter(threading.Thread):
     scanner = None
@@ -28,11 +27,10 @@ class Plotter(threading.Thread):
         self.scanner = scanner
         self.stop_thread = False
 
-
     def run(self):
         self.setup()
 
-        while self.stop_thread == False:
+        while not self.stop_thread:
             self.render()
 
     def setup(self) -> None:
@@ -40,9 +38,11 @@ class Plotter(threading.Thread):
         self.screen = pygame.display.set_mode(self.screen_dimensions, 0, 32)
         pygame.display.set_caption("Plotter")
 
-        self.ratio = self.ratio_x, self.ratio_y = (self.screen_dimensions[0] / self.field[0], self.screen_dimensions[1] / self.field[1])
+        self.ratio = self.ratio_x, self.ratio_y = (
+            self.screen_dimensions[0] / self.field[0], self.screen_dimensions[1] / self.field[1]
+        )
         self.center = (self.screen_dimensions[0] // 2, self.screen_dimensions[1] // 2)
-    
+
     def clear(self) -> None:
         self.screen.fill((255, 255, 255))
 
@@ -55,7 +55,7 @@ class Plotter(threading.Thread):
 
             # radius
             surface = pygame.Surface(self.screen_dimensions)
-            surface.set_colorkey((0,0,0))
+            surface.set_colorkey((0, 0, 0))
             surface.set_alpha(128)
 
             pygame.draw.circle(surface, (0, 0, 255), (x, y), int(beacon.avg() * self.ratio_x))
@@ -68,7 +68,7 @@ class Plotter(threading.Thread):
         (cart_x, cart_y) = self.scanner.cart_position()
         x = self.center[0] + int(cart_x * self.ratio_x)
         y = self.center[1] - int(cart_y * self.ratio_y)
-        
+
         pygame.draw.circle(self.screen, (0, 0, 0), (x, y), int(5 * self.ratio_x))
 
         pygame.display.update()
