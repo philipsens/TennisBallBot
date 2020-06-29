@@ -76,12 +76,12 @@ class BLEScanner:
 
         # if true, take the right side beacons, else the left
         if right_avg_distance < left_avg_distance:
-            print("use right")
+            # print("use right")
 
             vertical_radius = space_right_vertical / 2
             vertical = min_right_vertical + vertical_radius
         else: 
-            print("use left")
+            # print("use left")
 
             vertical_radius = space_left_vertical / 2
             vertical = min_left_vertical + vertical_radius
@@ -89,12 +89,12 @@ class BLEScanner:
         horizontal, horizontal_radius = (0, 0)
 
         if top_avg_distance < bot_avg_distance:
-            print("use top")
+            # print("use top")
 
             horizontal_radius = space_top_horizontal / 2
             horizontal = min_top_horizontal + horizontal_radius
         else:
-            print("use bot")
+            # print("use bot")
 
             horizontal_radius = space_bot_horizontal / 2
             horizontal = min_bot_horizontal + horizontal_radius

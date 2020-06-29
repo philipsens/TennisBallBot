@@ -1,10 +1,10 @@
 import os
 
-from flask import Flask, json, request, send_from_directory
+from flask import Flask, json, abort, request, send_from_directory
 from flask_cors import CORS
 
 
-app = Flask(__name__, static_folder='webapp/build')
+app = Flask(__name__, static_folder='webapp/build/')
 CORS(app)
 
 COLLECTION_MODE_ZONE = 0
@@ -24,15 +24,23 @@ collection_mode = COLLECTION_MODE_ZONE
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve(path):
+    if not path:
+        path = "index.html"
+
     if path_to_file_exists(path):
         return send_from_directory(app.static_folder, path)
     else:
-        return send_from_directory(app.static_folder, 'index.html')
+        return abort(404)
 
 
 def path_to_file_exists(path):
-    path != "" and os.path.exists(app.static_folder + '/' + path)
+    if not path:
+        return False
 
+    full_path = app.static_folder + "/" + path
+    print(full_path)
+
+    return os.path.exists(full_path)
 
 @app.route(ZONE_URI, methods=['GET', 'POST'])
 def handle_zone():
