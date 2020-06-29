@@ -3,6 +3,7 @@ import serial
 import time
 from queue import Queue
 
+
 '''
 The commands accepted by the Zumo are the following
 
@@ -16,11 +17,12 @@ ball-right  [-400, 400] yes
 honk        -           no
 delay       -           yes
 '''
-class Zumo(threading.Thread):
 
+
+class Zumo(threading.Thread):
     queue = Queue()
 
-    stop_thread = False
+    running = True
     serial_connection = None
 
     def __init__(self, port: str) -> None:
@@ -31,12 +33,12 @@ class Zumo(threading.Thread):
         self.queue.put((identifier, value, time))
 
     def run(self):
-        if (not self.serial_connection.is_open):
+        if not self.serial_connection.is_open:
             print("Cannot open serial connection")
             return
 
-        while self.stop_thread == False:
-            if (self.queue.empty()):
+        while self.running:
+            if self.queue.empty():
                 time.sleep(0.25)
                 continue
 
@@ -55,9 +57,11 @@ class Zumo(threading.Thread):
             message = identifier + "=" + str(value) + "=" + str(time)
             messages.append(message)
 
-        return ';'.join(messages) + "\r\n"
+        formatted_messages = ';'.join(messages) + "\r\n"
+
+        return formatted_messages
 
     def stop(self) -> None:
-        self.stop_thread = True
+        self.running = False
         self.join()
         self.serial_connection.close()
