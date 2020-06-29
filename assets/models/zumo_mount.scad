@@ -84,7 +84,7 @@ module tennis_ball_mount() {
                 translate([13 / 2, -tennis_ball_handle_width/2 + 6, -tennis_mount_height / 2 + 1.5]) 
                     difference() {
                         union() {
-                            cube([10,12,3], true);
+                            cube([12,12,3], true);
                             
                             translate([-2.5, -6 + 1.5, 4])
                                 rotate([0, 0, 270])
@@ -92,33 +92,22 @@ module tennis_ball_mount() {
                         
                         }
                         
-                        translate([1.5, 2, 0])
-                        hull() { 
-                            cylinder (h = board_depth * 2, r=hole_size/2, center = true); 
-
-                            
-                            translate([-3, 0, 0])
-                                cylinder (h = board_depth * 2, r=hole_size/2, center = true); 
-                        }
+                        translate([2.5, 2, 0])
+                            tennis_ball_mount_hole();
                     }
                 
                 translate([13 / 2, tennis_ball_handle_width/2 - 6, -tennis_mount_height / 2 + 1.5])  
                     difference() {
                         union() {
-                            cube([10,12,3], true);
+                            cube([12,12,3], true);
                             
                             translate([-2.5, 6 - 1.5, 4])
                                 rotate([0, 0, 270])
                                 support(3, 5, 5, 45);
                         
                         }
-                        translate([1.5, -2, 0])
-                        hull() { 
-                            cylinder (h = board_depth * 2, r=hole_size/2, center = true); 
-                            
-                            translate([-3, 0, 0])
-                                cylinder (h = board_depth * 2, r=hole_size/2, center = true); 
-                        }
+                        translate([2.5, -2, 0])
+                            tennis_ball_mount_hole();
                     }
 
         }
@@ -126,25 +115,34 @@ module tennis_ball_mount() {
         
         // Big holes on the standing part of the mount
         translate([-tennis_mount_length / 2, tennis_mount_width/2 - tennis_mount_holes_offset , -5])
-            rotate([90, 0 ,90]) 
-                hull() { 
-                    cylinder (h = board_depth * 2, r=hole_size/2, center = true); 
-                    
-                    translate([0, -5, 0])
-                        cylinder (h = board_depth * 2, r=hole_size/2, center = true); 
-                }
+            tennis_ball_mount_big_hole();
+
                 
         translate([-tennis_mount_length / 2, -tennis_mount_width/2 + tennis_mount_holes_offset , -5])
-            rotate([90, 0 ,90]) 
-                hull() { 
-                    cylinder (h = board_depth * 2, r=hole_size/2, center = true); 
-                    
-                    translate([0, -5, 0])
-                        cylinder (h = board_depth * 2, r=hole_size/2, center = true); 
-                }
+            tennis_ball_mount_big_hole();
 
     }
 
+}
+
+module tennis_ball_mount_hole() {
+    hull() { 
+        cylinder (h = board_depth * 2, r=hole_size/2, center = true); 
+
+        
+        translate([-3, 0, 0])
+            cylinder (h = board_depth * 2, r=hole_size/2, center = true); 
+    }
+}
+
+module tennis_ball_mount_big_hole() {
+    rotate([90, 0 ,90]) 
+        hull() { 
+            cylinder (h = board_depth * 2, r=hole_size/2, center = true); 
+            
+            translate([0, -5, 0])
+                cylinder (h = board_depth * 2, r=hole_size/2, center = true); 
+        }
 }
 
 module pi_camera_mount() {
@@ -232,25 +230,24 @@ module tennis_mount() {
         }
         
         translate([-tennis_mount_length / 2, tennis_mount_width/2 - tennis_mount_holes_offset , -5])
-            rotate([90, 0 ,90]) 
-                hull() { 
-                    cylinder (h = board_depth * 2, r=hole_size/2, center = true); 
-                    
-                    translate([0, -5, 0])
-                        cylinder (h = board_depth * 2, r=hole_size/2, center = true); 
-                }
+            tennis_mount_hole();
                 
         translate([-tennis_mount_length / 2, -tennis_mount_width/2 + tennis_mount_holes_offset , -5])
-            rotate([90, 0 ,90]) 
-                hull() { 
-                    cylinder (h = board_depth * 2, r=hole_size/2, center = true); 
-                    
-                    translate([0, -5, 0])
-                        cylinder (h = board_depth * 2, r=hole_size/2, center = true); 
-                }
+            tennis_mount_hole();
 
     }
 }
+
+module tennis_mount_hole() {
+    rotate([90, 0 ,90]) 
+        hull() { 
+            cylinder (h = board_depth * 2, r=hole_size/2, center = true); 
+            
+            translate([0, -5, 0])
+                cylinder (h = board_depth * 2, r=hole_size/2, center = true); 
+        }
+}
+    
 
 module support(support_depth, support_width, support_height, deg) {
     difference() {
@@ -292,48 +289,29 @@ module mount(board_length, board_width, board_depth, hole_size) {
             (board_length/2 - top_left_offset_left - slide_length_horizontal /2), 
             (-board_width/2 + top_left_offset_top), 
             0]
-        )  hull() {
-            cylinder (h = board_depth * 2, r=hole_size/2, center = true); 
-            
-            translate([slide_length_horizontal, 0, 0])
-                cylinder (h = board_depth * 2, r=hole_size/2, center = true); 
-        }
+        )  mount_hole([slide_length_horizontal, 0, 0]);
         
         // Top right hole
         translate([
             (-board_length/2 + top_right_offset_right), 
             (-board_width/2 + top_right_offset_top - slide_length_vertical / 2), 
             0]
-        ) hull() {
-            cylinder (h = board_depth * 2, r=hole_size/2, center = true);
-            
-            translate([0, slide_length_vertical, 0])// translate([-70,0,0])
-                cylinder (h = board_depth * 2, r=hole_size/2, center = true);
-        }
+        ) mount_hole([0, slide_length_vertical, 0]);
         
         // Bottom left hole
         translate([
             (board_length/2 - bot_left_offset_left - slide_length_horizontal /2), 
             (board_width/2 - bot_left_offset_bot), 
             0]
-        ) hull() { 
-            cylinder (h = board_depth * 2, r=hole_size/2, center = true); 
-            
-             translate([slide_length_horizontal, 0, 0])
-                cylinder (h = board_depth * 2, r=hole_size/2, center = true); 
-        }
-        
+        ) mount_hole([slide_length_horizontal, 0, 0]);
+
         // Bottom right hole
         translate([
             (-board_length/2 + bot_right_offset_right), 
             (board_width/2 - bot_right_offset_bot - slide_length_vertical / 2), 
             0]
-        ) hull() { 
-            cylinder (h = board_depth * 2, r=hole_size/2, center = true); 
-            
-            translate([0, slide_length_vertical, 0])
-                cylinder (h = board_depth * 2, r=hole_size/2, center = true); 
-        }
+        ) mount_hole([0, slide_length_vertical, 0]);
+                
         
         translate([19, 10, 0])
             plus(10.1, 3.1, 3);
@@ -348,6 +326,15 @@ module mount(board_length, board_width, board_depth, hole_size) {
             plus(10.1, 3.1, 3);
     }
 } 
+
+module mount_hole(dimentions) {
+    hull() { 
+        cylinder (h = board_depth * 2, r=hole_size/2, center = true); 
+        
+        translate(dimentions)
+            cylinder (h = board_depth * 2, r=hole_size/2, center = true); 
+    }
+}
 
 module plus(size, width, depth) {
         union() {
@@ -380,39 +367,19 @@ module pi_mount() {
                
                 // Bottom left corner
                 translate([pi_hole_bot_left_corner_x + 3, pi_hole_bot_left_corner_y + 3.5, 0])
-                    hull() {
-                        cylinder (h = board_depth * 2, r=pi_hole_size/2, center = true); 
-                        
-                        translate([5, 0, 0])
-                            cylinder (h = board_depth * 2, r=pi_hole_size/2, center = true); 
-                    }
+                    pi_mount_hole();
                    
                 // Top left corner
                 translate([pi_hole_top_left_corner_x + 3, pi_hole_top_left_corner_y - 3.5, 0])
-                    hull() {
-                        cylinder (h = board_depth * 2, r=pi_hole_size/2, center = true); 
-                        
-                        translate([5, 0, 0])
-                            cylinder (h = board_depth * 2, r=pi_hole_size/2, center = true); 
-                    }
+                    pi_mount_hole();
                     
                 // Bottom right corner
                 translate([pi_hole_bot_right_corner_x + 3, pi_hole_bot_right_corner_y + 3.5, 0])
-                    hull() {
-                        cylinder (h = board_depth * 2, r=pi_hole_size/2, center = true); 
-                        
-                        translate([5, 0, 0])
-                            cylinder (h = board_depth * 2, r=pi_hole_size/2, center = true); 
-                    }
+                    pi_mount_hole();
                     
                 // Top right corner
                 translate([pi_hole_top_right_corner_x + 3, pi_hole_top_right_corner_y - 3.5, 0])
-                    hull() {
-                        cylinder (h = board_depth * 2, r=pi_hole_size/2, center = true); 
-                        
-                        translate([5, 0, 0])
-                            cylinder (h = board_depth * 2, r=pi_hole_size/2, center = true); 
-                    }
+                    pi_mount_hole();
             }
         
         translate([19, 10, 0])
@@ -426,6 +393,15 @@ module pi_mount() {
             
         translate([-19, -10, 0])
             plus(10, 3, 8);
+    }
+}
+
+module pi_mount_hole() {
+    hull() {
+        cylinder (h = board_depth * 2, r=pi_hole_size/2, center = true); 
+        
+        translate([5, 0, 0])
+            cylinder (h = board_depth * 2, r=pi_hole_size/2, center = true); 
     }
 }
 
@@ -446,6 +422,3 @@ color("yellow", alpha=1) {
     translate([0, 0, 10])
         pi_mount();
 }
-
-// translate([-70,0,0])
-//    cube([10, 74, 10], true);
