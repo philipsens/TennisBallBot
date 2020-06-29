@@ -6,14 +6,15 @@ from queue import Queue
 '''
 The commands accepted by the Zumo are the following
 
-Command Range       Time in ms
+Command     Range       Time in ms
 ------------------------------
-move    [-400, 400] yes
-left    [-400, 400] yes
-right   [-400, 400] yes
-honk    -           no
-delay   -           yes
-
+move        [-400, 400] yes
+left        [-400, 400] yes
+ball-left   [-400, 400] yes
+right       [-400, 400] yes
+ball-right  [-400, 400] yes
+honk        -           no
+delay       -           yes
 '''
 class Zumo(threading.Thread):
 

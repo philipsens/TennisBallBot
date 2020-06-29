@@ -17,10 +17,6 @@ if __name__ == '__main__':
         scanner.start()
         webserver.start()
 
-        zumo.add("left") # max value = 400
-        zumo.add("right") # max value = 400
-        zumo.add("honk") # value is ignored
-
     except KeyboardInterrupt:
         zumo.stop()
         plotter.stop()

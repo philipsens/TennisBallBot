@@ -36,6 +36,18 @@ void processToken(const char* identifier, const char* value, const char* time) {
         Serial.print("=");
         Serial.println(wait_time);
     } else
+    // The "ball-left" command moves the right track forwards so the cart turns to the left
+    if (strcmp(identifier, "ball-left") == 0) {
+        int16_t speed = atoi(value);
+
+        motor.rightTrack(speed);
+        motor.update();
+
+        Serial.print("ball-left=");
+        Serial.print(speed);
+        Serial.print("=");
+        Serial.println(wait_time);
+    } else
     // The "right" command moves the left track forwards and the right track backwards so the cart turns to the right
     if (strcmp(identifier, "right") == 0) {
         int16_t speed = atoi(value);
@@ -45,6 +57,18 @@ void processToken(const char* identifier, const char* value, const char* time) {
         motor.update();
 
         Serial.print("right=");
+        Serial.print(speed);
+        Serial.print("=");
+        Serial.println(wait_time);
+    } else
+    // The "ball-right" command moves the left track forwards so the cart turns to the right
+    if (strcmp(identifier, "ball-right") == 0) {
+        int16_t speed = atoi(value);
+
+        motor.leftTrack(speed);
+        motor.update();
+
+        Serial.print("ball-right=");
         Serial.print(speed);
         Serial.print("=");
         Serial.println(wait_time);
