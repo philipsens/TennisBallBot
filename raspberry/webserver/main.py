@@ -3,7 +3,6 @@ import os
 from flask import Flask, json, abort, request, send_from_directory
 from flask_cors import CORS
 
-
 app = Flask(__name__, static_folder='webapp/build/')
 CORS(app)
 
@@ -41,6 +40,7 @@ def path_to_file_exists(path):
     print(full_path)
 
     return os.path.exists(full_path)
+
 
 @app.route(ZONE_URI, methods=['GET', 'POST'])
 def handle_zone():
