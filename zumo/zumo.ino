@@ -55,6 +55,11 @@ void processToken(const char* identifier, const char* value, const char* time) {
         buzzer.playNote(3 + 5 * 12, 250, 15);
 
         Serial.println("honk");
+    } else
+    // Forced delay
+    if (strcmp(identifier, "delay") == 0) {
+        Serial.print("delay=")
+        Serial.println(wait_time);
     } else {
         Serial.println("Not a valid action");
         return;
