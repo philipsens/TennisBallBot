@@ -19,49 +19,28 @@ delay       -           yes
 '''
 
 
-class Zumo(threading.Thread):
-    queue = Queue()
-
+class Zumo:
     running = True
     serial_connection = None
+
+    lock = threading.Lock()
 
     def __init__(self, port: str) -> None:
         threading.Thread.__init__(self)
         self.serial_connection = serial.Serial(port, 115200)
 
-    def add(self, identifier: str, value: int = 0, time: int = 0) -> None:
-        self.queue.put((identifier, value, time))
+    def run(self, identifier: str, value: int = 0, wait_time: int = 0) -> None:
 
-    def run(self):
+        self.lock.acquire()
+
         if not self.serial_connection.is_open:
-            print("Cannot open serial connection")
+            print("Serial connection is closed")
             return
 
-        while self.running:
-            if self.queue.empty():
-                time.sleep(0.25)
-                continue
+        message = identifier + "=" + str(value) + "=" + str(wait_time) + ";\r\n"
 
-            message = self.compose_message()
+        self.serial_connection.write(bytes(message, encoding="ascii"))
 
-            print(message)
+        time.sleep(wait_time / 1000)
+        self.lock.release()
 
-            self.serial_connection.write(bytes(message, encoding="ascii"))
-
-    def compose_message(self) -> str:
-        messages = []
-
-        while not self.queue.empty():
-            identifier, value, time = self.queue.get()
-
-            message = identifier + "=" + str(value) + "=" + str(time)
-            messages.append(message)
-
-        formatted_messages = ';'.join(messages) + "\r\n"
-
-        return formatted_messages
-
-    def stop(self) -> None:
-        self.running = False
-        self.join()
-        self.serial_connection.close()
