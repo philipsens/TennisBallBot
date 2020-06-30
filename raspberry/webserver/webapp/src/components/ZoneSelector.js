@@ -1,17 +1,22 @@
 import React, {useEffect, useState} from 'react'
 import Zone from "./Zone";
 import {CollectionMode} from "../CollectionMode";
+import {Zones} from "../Zones";
 
 const baseURI = process.env.REACT_APP_API_URL;
 const collectionURI = baseURI + 'collection';
 const zoneURI = baseURI + 'zone';
 
 export default function ZoneSelector({collectionMode}) {
-    const [selectedCollection, setSelectedCollection] = useState(0);
-    const [selectedZone, setSelectedZone] = useState(1);
-    const zones = [...new Array(12)].map((_, i) => ({
-        middle: i === 4 || i === 7,
-        corner: i === 0 || i === 2 || i === 9 || i === 11,
+    const [selectedCollection, setSelectedCollection] = useState(Zones.UpperLeftCorner);
+    const [selectedZone, setSelectedZone] = useState(Zones.TopZone);
+    const zones = [...new Array(12)].map((_, zoneID) => ({
+        middle: zoneID === Zones.UpperMiddleZone
+            || zoneID === Zones.LowerMiddleZone,
+        corner: zoneID === Zones.UpperLeftCorner
+            || zoneID === Zones.UpperRightCorner
+            || zoneID === Zones.LowerLeftCorner
+            || zoneID === Zones.LowerRightCorner,
         disabled: collectionMode === CollectionMode.DISABLED
     }));
 
@@ -45,13 +50,13 @@ export default function ZoneSelector({collectionMode}) {
 
     return (
         <div className="zone-selector">
-            {zones.map((zone, i) => (
+            {zones.map((zone, zoneID) => (
                 <Zone
-                    key={i}
-                    onCollectionSelected={() => setSelectedCollection(i)}
-                    onZoneSelected={() => setSelectedZone(i)}
-                    selected={i === selectedZone || collectionMode === CollectionMode.ALL}
-                    collection={i === selectedCollection}
+                    key={zoneID}
+                    onCollectionSelected={() => setSelectedCollection(zoneID)}
+                    onZoneSelected={() => setSelectedZone(zoneID)}
+                    selected={zoneID === selectedZone || collectionMode === CollectionMode.ALL}
+                    collection={zoneID === selectedCollection}
                     {...zone}
                 />
             ))}
