@@ -18,7 +18,6 @@ if __name__ == '__main__':
 
     try:
         plotter.start()
-        zumo.start()
         scanner.start()
         webserver.start()
 
@@ -26,4 +25,3 @@ if __name__ == '__main__':
         plotter.stop()
         webserver.stop()
         scanner.stop()
-        zumo.stop()
