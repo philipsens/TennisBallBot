@@ -6,6 +6,7 @@ import pygame
 
 class Plotter(threading.Thread):
     scanner = None
+    zones = None
     stop_thread = False
 
     screen = None
@@ -22,9 +23,10 @@ class Plotter(threading.Thread):
 
     center = None
 
-    def __init__(self, scanner):
+    def __init__(self, scanner, zones):
         threading.Thread.__init__(self)
         self.scanner = scanner
+        self.zones = zones
         self.stop_thread = False
 
     def run(self):
@@ -49,6 +51,20 @@ class Plotter(threading.Thread):
     def render(self) -> None:
         self.clear()
 
+        self.render_collection_zones()
+        self.render_beacons()
+        self.render_cart()
+
+        pygame.display.update()
+
+        time.sleep(0.25)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.stop_thread = True
+
+
+    def render_beacons(self) -> None:
         for beacon in self.scanner.beacons:
             x = (self.center[0] + int(beacon.position[0] * self.ratio_x))
             y = (self.center[1] - int(beacon.position[1] * self.ratio_y))
@@ -65,19 +81,40 @@ class Plotter(threading.Thread):
             # beacon
             pygame.draw.circle(self.screen, (255, 0, 0), (x, y), int(5 * self.ratio_x))
 
+
+    def render_collection_zones(self) -> None:
+        for id, beacon in enumerate(self.scanner.beacons):
+            x = (self.center[0] + int(beacon.position[0] * self.ratio_x))
+            y = (self.center[1] - int(beacon.position[1] * self.ratio_y))
+
+            zone = self.zones.collection_from_beacon_id(id)
+            margin = self.zones.collection_margin[zone]
+
+            surface = pygame.Surface(self.screen_dimensions)
+            surface.set_colorkey((0, 0, 0))
+            surface.set_alpha(128)
+
+            rect_x = float(x - (margin["left"] * self.ratio_x))
+            rect_y = float(y - (margin["top"] * self.ratio_y))
+
+            rect_width  = float(margin["left"] + margin["right"]) * self.ratio_x
+            rect_height = float(margin["top"] + margin["bottom"]) * self.ratio_y
+
+            pygame.draw.rect(surface, (0, 255, 0), (rect_x, rect_y, rect_width, rect_height))
+
+            self.screen.blit(surface, (0, 0))
+
+    def render_zones(self) -> None:
+        pass
+
+
+    def render_cart(self) -> None:
         (cart_x, cart_y) = self.scanner.cart_position()
         x = self.center[0] + int(cart_x * self.ratio_x)
         y = self.center[1] - int(cart_y * self.ratio_y)
 
         pygame.draw.circle(self.screen, (0, 0, 0), (x, y), int(5 * self.ratio_x))
 
-        pygame.display.update()
-
-        time.sleep(0.25)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.stop_thread = True
 
     def stop(self):
         self.stop_thread = True
