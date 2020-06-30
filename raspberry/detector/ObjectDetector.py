@@ -1,14 +1,14 @@
 import os
 import time
 
-from Detection import Detection
-from FrameRate import FrameRate
-from Model import Model
-from VideoStream import VideoStream
+from .Detection import Detection
+from .FrameRate import FrameRate
+from .Model import Model
+from .VideoStream import VideoStream
 
 
 class ObjectDetector:
-    MODEL_DIR = 'TFLite_model'
+    MODEL_DIR = 'detector/TFLite_model'
     GRAPH_NAME = 'edgetpu.tflite'
     LABELMAP_NAME = 'labelmap.txt'
     MIN_CONFIDENCE_THRESHOLD = 0.5
