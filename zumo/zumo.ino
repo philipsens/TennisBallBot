@@ -82,8 +82,14 @@ void processToken(const char* identifier, const char* value, const char* time) {
     } else
     // Forced delay
     if (strcmp(identifier, "delay") == 0) {
-        Serial.print("delay=")
-        Serial.println(wait_time);
+        int32_t delay_time = atoi(value);
+
+        Serial.print("delay=");
+        Serial.println(delay_time);
+
+        delay(delay_time);
+
+        return;
     } else {
         Serial.println("Not a valid action");
         return;
