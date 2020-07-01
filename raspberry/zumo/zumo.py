@@ -29,18 +29,20 @@ class Zumo:
         threading.Thread.__init__(self)
         self.serial_connection = serial.Serial(port, 115200)
 
+
     def run(self, identifier: str, value: int = 0, wait_time: int = 0) -> None:
 
-        self.lock.acquire()
+        with self.lock:
+            if not self.serial_connection.is_open:
+                print("Serial connection is closed")
+                return
 
-        if not self.serial_connection.is_open:
-            print("Serial connection is closed")
-            return
+            while self.serial_connection.inWaiting() > 0:
+                # Clear out buffer (else the Serial connection becomes really slow)
+                self.serial_connection.read(1)
 
-        message = identifier + "=" + str(value) + "=" + str(wait_time) + ";\r\n"
+            message = identifier + "=" + str(value) + "=" + str(wait_time) + ";\r\n"
 
-        self.serial_connection.write(bytes(message, encoding="ascii"))
+            self.serial_connection.write(bytes(message, encoding="ascii"))
 
-        time.sleep(wait_time / 1000)
-        self.lock.release()
-
+            time.sleep(wait_time / 1000)
