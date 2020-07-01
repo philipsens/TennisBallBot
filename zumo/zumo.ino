@@ -6,8 +6,7 @@
 ZumoAPI::ZumoMotor motor;
 ZumoAPI::SerialManager serial = NULL;
 
-void processToken(const char* identifier, const char* value, const char* time) {
-    int32_t wait_time = atoi(time);
+void processToken(const char* identifier, const char* value) {
 
     // The "move" command moves both the tracks in the same direction to go backwards or forwards
     if (strcmp(identifier, "move") == 0) {
@@ -18,60 +17,52 @@ void processToken(const char* identifier, const char* value, const char* time) {
         motor.update();
 
         Serial.print("move=");
-        Serial.print(speed);
-        Serial.print("=");
-        Serial.println(wait_time);
+        Serial.println(speed);
 
     } else
     // The "left" command moves the left track backwards and the right track forwards so the cart turns to the left
     if (strcmp(identifier, "left") == 0) {
         int16_t speed = atoi(value);
 
-        motor.leftTrack(-speed);
         motor.rightTrack(speed);
         motor.update();
 
         Serial.print("left=");
-        Serial.print(speed);
-        Serial.print("=");
-        Serial.println(wait_time);
+        Serial.println(speed);
+
     } else
     // The "ball-left" command moves the right track forwards so the cart turns to the left
-    if (strcmp(identifier, "ball-left") == 0) {
-        int16_t speed = atoi(value);
-
-        motor.rightTrack(speed);
-        motor.update();
-
-        Serial.print("ball-left=");
-        Serial.print(speed);
-        Serial.print("=");
-        Serial.println(wait_time);
-    } else
-    // The "right" command moves the left track forwards and the right track backwards so the cart turns to the right
     if (strcmp(identifier, "right") == 0) {
         int16_t speed = atoi(value);
 
         motor.leftTrack(speed);
-        motor.rightTrack(-speed);
         motor.update();
 
         Serial.print("right=");
-        Serial.print(speed);
-        Serial.print("=");
-        Serial.println(wait_time);
+        Serial.println(speed);
+
     } else
-    // The "ball-right" command moves the left track forwards so the cart turns to the right
-    if (strcmp(identifier, "ball-right") == 0) {
+    if (strcmp(identifier, "center-left") == 0) {
         int16_t speed = atoi(value);
 
-        motor.leftTrack(speed);
+        motor.leftTrack(-speed);
+        motor.rightTrack(speed);
         motor.update();
 
-        Serial.print("ball-right=");
-        Serial.print(speed);
-        Serial.print("=");
-        Serial.println(wait_time);
+        Serial.print("center-left=");
+        Serial.println(speed);
+
+    } else
+    if (strcmp(identifier, "center-right") == 0) {
+        int16_t speed = atoi(value);
+
+        motor.leftTrack(-speed);
+        motor.rightTrack(speed);
+        motor.update();
+
+        Serial.print("center-right=");
+        Serial.println(speed);
+
     } else
     // Goose goes "honks"
     if (strcmp(identifier, "honk") == 0) {
@@ -80,24 +71,16 @@ void processToken(const char* identifier, const char* value, const char* time) {
 
         Serial.println("honk");
     } else
-    // Forced delay
-    if (strcmp(identifier, "delay") == 0) {
-        Serial.print("delay=")
-        Serial.println(wait_time);
+    if (strcmp(identifier, "stop") == 0) {
+        reset();
+        Serial.println("stopped");
+
     } else {
-        Serial.println("Not a valid action");
+        Serial.println("Not a valid action, resetting");
+        reset(); // Incase of failed action
         return;
     }
 
-    Serial.println("Starting action");
-
-    // Keep executing the command for n amount of time.
-    delay(wait_time);
-
-    Serial.println("Stopping action");
-
-    // Set the motors to idle after executing the action.
-    reset();
 }
 
 void reset() {
@@ -111,9 +94,8 @@ void processLine(char* line) {
 
     const char* identifier  = strtok_r(line, delimiter, &line);
     const char* value       = strtok_r(line, delimiter, &line);
-    const char* time        = strtok_r(line, delimiter, &line);
 
-    processToken(identifier, value, time);
+    processToken(identifier, value);
 }
 
 void callback(char* buffer) {

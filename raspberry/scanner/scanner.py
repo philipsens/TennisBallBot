@@ -34,8 +34,7 @@ class BLEScanner:
         # accuracy = BLEBeacon.calculate_accuracy(rssi, packet.tx_power)
         beacon.push(distance)
 
-        # print("[BLEScanner] beacon: %d, distance: %f, accuracy: %f, avg: %f" % (major, distance, accuracy,
-        # beacon.avg()))
+        # print("[BLEScanner] beacon: %d, distance: %f, avg: %f" % (major, distance, beacon.avg()))
 
     def cart_position(self) -> Tuple[float, float]:
         distance_horizontal = abs(self.beacons[0].position[0] - self.beacons[1].position[0])
