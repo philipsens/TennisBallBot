@@ -7,15 +7,18 @@ from queue import Queue
 '''
 The commands accepted by the Zumo are the following
 
-Command     Range       Time in ms
+Command     Range
 ------------------------------
-move        [-400, 400] yes
-left        [-400, 400] yes
-ball-left   [-400, 400] yes
-right       [-400, 400] yes
-ball-right  [-400, 400] yes
-honk        -           no
-delay       -           yes
+move        [-400, 400]
+left        [-400, 400]
+right       [-400, 400]
+
+center-left   [-400, 400]
+center-right  [-400, 400]
+
+honk # honk honk
+stop # stops both tracks
+
 '''
 
 
@@ -30,7 +33,7 @@ class Zumo:
         self.serial_connection = serial.Serial(port, 115200)
 
 
-    def run(self, identifier: str, value: int = 0, wait_time: int = 0) -> None:
+    def run(self, identifier: str, value: int = 0) -> None:
 
         with self.lock:
             if not self.serial_connection.is_open:
@@ -41,8 +44,6 @@ class Zumo:
                 # Clear out buffer (else the Serial connection becomes really slow)
                 self.serial_connection.read(1)
 
-            message = identifier + "=" + str(value) + "=" + str(wait_time) + ";\r\n"
+            message = identifier + "=" + str(value) + ";\r\n"
 
             self.serial_connection.write(bytes(message, encoding="ascii"))
-
-            time.sleep(wait_time / 1000)
