@@ -1,20 +1,21 @@
 import os
 import time
 
-from Detection import Detection
-from FrameRate import FrameRate
-from Model import Model
-from VideoStream import VideoStream
+from .Detection import Detection
+from .FrameRate import FrameRate
+from .Model import Model
+from .VideoStream import VideoStream
 
 
 class ObjectDetector:
-    MODEL_DIR = 'TFLite_model'
+    MODEL_DIR = 'detector/TFLite_model'
     GRAPH_NAME = 'edgetpu.tflite'
     LABELMAP_NAME = 'labelmap.txt'
     MIN_CONFIDENCE_THRESHOLD = 0.5
     RESOLUTION_WIDTH = 1280
     RESOLUTION_HEIGHT = 720
 
+    paused = True
     running = True
 
     video_stream: VideoStream
@@ -44,6 +45,11 @@ class ObjectDetector:
         while self.running:
             # self.frame_rate.reset()
 
+            # if paused, just sleep and check again
+            if self.paused:
+                time.sleep(0.25)
+                continue
+
             frame = self.video_stream.read().copy()
             self.model.create_input_data_from_frame(frame)
             self.model.run()
@@ -70,3 +76,13 @@ class ObjectDetector:
 
     def stop(self):
         self.running = False
+
+
+    def pause(self):
+        print("ObjectDetector paused")
+        self.paused = True
+
+
+    def unpause(self):
+        print("ObjectDetector unpaused")
+        self.paused = False
