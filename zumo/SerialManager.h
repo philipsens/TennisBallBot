@@ -1,4 +1,5 @@
 #include <HardwareSerial.h>
+#include <Arduino.h>
 
 namespace ZumoAPI {
     typedef void (*SerialCallback)(char buffer[]);
