@@ -3,7 +3,7 @@ import threading
 from simple_pid import PID
 
 from .ObjectDetector import ObjectDetector
-from ..zumo.zumo import Zumo
+from zumo.zumo import Zumo
 
 
 class Detector(threading.Thread):
@@ -26,7 +26,7 @@ class Detector(threading.Thread):
     def run(self):
         self.object_detector = ObjectDetector()
         self.initialize_pid()
-        self.object_detector.start(Detector.callback)
+        self.object_detector.start(self.callback)
 
     def initialize_pid(self):
         self.direction_pid = PID(1, 0.1, 0.05, setpoint=self.MIDDLE_POINT)
