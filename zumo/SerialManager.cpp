@@ -15,7 +15,6 @@ namespace ZumoAPI {
         char read;
         unsigned long current_millis = millis();
 
-
         while (Serial.available() > 0) {
             read = Serial.read();
 
@@ -35,8 +34,9 @@ namespace ZumoAPI {
             }
         }
 
-        if (current_millis - this->last_serial_response < two_seconds) {
-            this->callback('stop;')
+        if (current_millis - this->last_serial_response > two_seconds) {
+            this->last_serial_response = millis();
+            this->callback("stop;");
         }
     }
     
