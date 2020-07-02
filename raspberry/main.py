@@ -12,7 +12,7 @@ if __name__ == '__main__':
 
     zumo = Zumo("/dev/ttyACM0")
     scanner = BLEScanner("00000000-0000-0000-0000-000000000000")
-    detector = Detector()
+    detector = Detector(zumo)
     webserver = Webserver("0.0.0.0")
     zones = Zones(webserver, scanner)
 
