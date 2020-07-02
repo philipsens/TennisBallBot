@@ -1,4 +1,5 @@
 import sys
+import math
 from typing import Tuple
 from .beacon import BLEBeacon
 from beacontools import BeaconScanner, IBeaconFilter
@@ -8,12 +9,15 @@ class BLEScanner:
     scanner = None
     beacons = None
 
+    current_beacon_location = None
+    last_beacon_location = None
+
     def __init__(self, uuid: str) -> None:
         self.scanner = BeaconScanner(self.callback,
                                      device_filter=IBeaconFilter(uuid=uuid)
                                      )
 
-        beacon_size = 10
+        beacon_size = 50
 
         self.beacons = [  # Every beacon is 1 meter apart from each other
             BLEBeacon(beacon_size, (-50, 50)),
@@ -31,10 +35,7 @@ class BLEScanner:
 
         beacon = self.beacons[major]
         distance = BLEBeacon.calculate_distance(rssi, packet.tx_power)
-        # accuracy = BLEBeacon.calculate_accuracy(rssi, packet.tx_power)
         beacon.push(distance)
-
-        # print("[BLEScanner] beacon: %d, distance: %f, avg: %f" % (major, distance, beacon.avg()))
 
     def cart_position(self) -> Tuple[float, float]:
         distance_horizontal = abs(self.beacons[0].position[0] - self.beacons[1].position[0])
@@ -76,6 +77,18 @@ class BLEScanner:
             horizontal = min_bot_horizontal + horizontal_radius
 
         return horizontal, vertical
+
+    def update_location(self) -> None:
+        self.last_beacon_location = self.current_beacon_location
+        self.current_beacon_location = self.cart_position()
+
+    def cart_rotation(self) -> float:
+        x = self.current_beacon_location[0] - self.last_beacon_location[0]
+        y = self.current_beacon_location[1] - self.last_beacon_location[1]
+
+        rotation_radian = math.atan2(x, y)
+
+        return math.degrees(rotation_radian)
 
     def start(self) -> None:
         self.scanner.start()
