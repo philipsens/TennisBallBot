@@ -30,6 +30,7 @@ if __name__ == '__main__':
         detector.unpause()
 
     except KeyboardInterrupt:
+        zumo.run('stop')
         plotter.stop()
         scanner.stop()
         detector.stop()
