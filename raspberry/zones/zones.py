@@ -1,3 +1,4 @@
+import math
 from enum import Enum
 from typing import Tuple
 
@@ -50,7 +51,6 @@ class Zones:
 
         return in_horizontal and in_vertical
 
-
     def collection_from_beacon_id(self, id: int) -> Collection:
         collection_api_points = {
             0: Collection.TOP_LEFT,
@@ -60,7 +60,6 @@ class Zones:
         }
 
         return collection_api_points.get(id, None) 
-
 
     def selected_collection(self) -> Collection:
         collection_api_points = {
@@ -74,16 +73,23 @@ class Zones:
 
         return collection_api_points.get(collection_id, None)
 
-
     def selected_collection_position(self) -> Tuple[int, int]:
         id = self.selected_collection().value
 
         return self.scanner.beacons[id].position
 
+    def selected_collection_rotation(self, x: float, y: float) -> float:
+        (col_x, col_y) = self.selected_collection_position()
+
+        delta_x = x + col_x
+        delta_y = y + col_y
+
+        rotation_radian = math.atan2(delta_x, delta_y)
+
+        return math.degrees(rotation_radian)
 
     def in_zone(self) -> bool:
         return False
-
 
     def selected_zone(self) -> int:
         print(self.api.webserver.collection)

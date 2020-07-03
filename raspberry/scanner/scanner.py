@@ -83,10 +83,11 @@ class BLEScanner:
         self.current_beacon_location = self.cart_position()
 
     def cart_rotation(self) -> float:
-        x = self.current_beacon_location[0] - self.last_beacon_location[0]
-        y = self.current_beacon_location[1] - self.last_beacon_location[1]
 
-        rotation_radian = math.atan2(x, y)
+        delta_x = self.current_beacon_location[0] - self.last_beacon_location[0]
+        delta_y = self.current_beacon_location[1] - self.last_beacon_location[1]
+
+        rotation_radian = math.atan2(delta_x, delta_y)
 
         return math.degrees(rotation_radian)
 
