@@ -16,6 +16,8 @@ class Detector(threading.Thread):
     distance_pid: PID
     zumo: Zumo
 
+    done_flag = False
+
     use_pid = bool
 
     def __init__(self, zumo, pid=False):
@@ -41,6 +43,7 @@ class Detector(threading.Thread):
         self.object_detector.pause()
 
     def unpause(self):
+        self.done_flag = False
         self.object_detector.unpause()
 
     def callback(self, detections):
@@ -65,9 +68,12 @@ class Detector(threading.Thread):
     def collected(self, detection):
         return detection.width > self.CLOSE_POINT
 
+    def is_done(self) -> bool:
+        return self.done_flag
+
     def done(self):
         self.zumo.run('stop')
-        self.pause()
+        self.done_flag = True
         print("Collected ball")
 
     def get_control(self, detection):

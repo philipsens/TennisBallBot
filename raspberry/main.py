@@ -6,6 +6,7 @@ from zones.zones import Zones
 from detector.detector import Detector
 from navigator.navigator import Navigator
 from navigator.return_ball_state import ReturnBallState
+from navigator.search_ball_state import SearchBallState
 
 import time
 
@@ -27,7 +28,7 @@ if __name__ == '__main__':
         detector.start()
         webserver.start()
 
-        navigator.transition_to(ReturnBallState())
+        navigator.transition_to(SearchBallState())
 
         while True:
             navigator.update()
