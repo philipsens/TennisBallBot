@@ -1,14 +1,14 @@
-from .navigator_state import NavigatorState
-from .return_ball_state import ReturnBallState
+import navigator.navigator_state as NS
+import navigator.return_ball_state as RBS
 
-class SearchBallState(NavigatorState):
+class SearchBallState(NS.NavigatorState):
     
     def start(self):
         self.context.detector.unpause()
 
     def update(self):
         if self.context.detector.is_done():
-            self.context.transition_to(ReturnBallState())
+            self.context.transition_to(RBS.ReturnBallState())
 
     def stop(self):
         self.context.detector.pause()

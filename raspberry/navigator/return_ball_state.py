@@ -1,9 +1,9 @@
 import math
 import time
-from .navigator_state import NavigatorState
-from .go_to_zone_state import GoToZoneState
+import navigator.navigator_state as NS
+import navigator.go_to_zone_state as GTZS
 
-class ReturnBallState(NavigatorState):
+class ReturnBallState(NS.NavigatorState):
     # 0.1 sec on a speed of 200 is ~15deg rotation
     # 0.2 sec on a speed of 200 is ~22deg rotation
     # 2 sec on a speed of 150 is ~90 deg rotation
@@ -28,7 +28,7 @@ class ReturnBallState(NavigatorState):
             self.context.zumo.run("stop")
             self.context.zumo.run("move", -self.speed)
 
-            self.context.transition_to(GoToZoneState(self.rotation))
+            self.context.transition_to(GTZS.GoToZoneState(self.rotation))
 
         self.target_rotation = self.calculate_target_rotation()
 

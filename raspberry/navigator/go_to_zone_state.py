@@ -1,9 +1,9 @@
 import math
 import time
-from .navigator_state import NavigatorState
-from .search_ball_state import SearchBallState
+import navigator.navigator_state as NS
+import navigator.search_ball_state as SBS
 
-class SearchBallState(NavigatorState):
+class SearchBallState(NS.NavigatorState):
 
     rotation = 0
     target_rotation = 0
@@ -21,7 +21,7 @@ class SearchBallState(NavigatorState):
             print("in zone")
             time.sleep(1)
 
-            self.context.transition_to(SearchBallState())
+            self.context.transition_to(SBS.SearchBallState())
 
             return
 
@@ -34,7 +34,7 @@ class SearchBallState(NavigatorState):
             self.context.zumo.run("move", self.speed)
             time.sleep(0.1)
 
-         elif self.is_left(rotation_difference):
+        elif self.is_left(rotation_difference):
             rotation_angle = abs(rotation_difference)
             max_turn_radius = 90
             max_time_to_turn = 2
