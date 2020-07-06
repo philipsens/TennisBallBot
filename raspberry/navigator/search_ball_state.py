@@ -3,13 +3,10 @@ from .navigator_state import NavigatorState
 class SearchBallState(NavigatorState):
     
     def start(self):
-        print("start")
-        pass
+        self.context.detector.unpause()
 
     def update(self):
-        print("update")
         pass
-    
+
     def stop(self):
-        print("stop")
-        pass
+        self.context.detector.pause()

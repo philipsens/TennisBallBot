@@ -22,9 +22,9 @@ class Detector(threading.Thread):
         threading.Thread.__init__(self)
         self.zumo = zumo
         self.use_pid = pid
+        self.object_detector = ObjectDetector()
 
     def run(self):
-        self.object_detector = ObjectDetector()
         self.initialize_pid()
         self.object_detector.start(self.callback)
 
