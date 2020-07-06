@@ -1,5 +1,6 @@
 import threading
 import time
+import random
 
 import pygame
 
@@ -10,10 +11,10 @@ class Plotter(threading.Thread):
     stop_thread = False
 
     screen = None
+    zone_colours = {}
 
     # screen dimensions are 500px x 500px
     screen_dimensions = (500, 500)
-    # Field is 150cm x 150cm
     field = (150, 150)
 
     # pixel ratio
@@ -44,9 +45,18 @@ class Plotter(threading.Thread):
             self.screen_dimensions[0] / self.field[0], self.screen_dimensions[1] / self.field[1]
         )
         self.center = (self.screen_dimensions[0] // 2, self.screen_dimensions[1] // 2)
+        self.generate_zone_colours()
 
     def clear(self) -> None:
         self.screen.fill((255, 255, 255))
+
+    def generate_zone_colours(self) -> None:
+        for zone, pos in self.zones.zone_position.items():
+            r = random.randrange(0, 255)
+            g = random.randrange(0, 255)
+            b = random.randrange(0, 255)
+
+            self.zone_colours[zone] = (r, g, b)
 
     def render(self) -> None:
         self.clear()
@@ -116,17 +126,13 @@ class Plotter(threading.Thread):
             surface.set_colorkey((0, 0, 0))
             surface.set_alpha(128)
 
-            print(margin["top"])
-
             rect_x = float(x - (margin["left"] * self.ratio_x))
             rect_y = float(y - (margin["top"] * self.ratio_y))
-
-            print((rect_x, rect_y))
 
             rect_width  = float(margin["left"] + margin["right"]) * self.ratio_x
             rect_height = float(margin["top"] + margin["bottom"]) * self.ratio_y
 
-            pygame.draw.rect(surface, (253, 171, 33), (rect_x, rect_y, rect_width, rect_height))
+            pygame.draw.rect(surface, self.zone_colours[zone], (rect_x, rect_y, rect_width, rect_height))
             self.screen.blit(surface, (0, 0))
 
     def render_cart(self) -> None:

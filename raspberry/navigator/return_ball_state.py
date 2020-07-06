@@ -1,6 +1,7 @@
 import math
 import time
 from .navigator_state import NavigatorState
+from .go_to_zone_state import GoToZoneState
 
 class ReturnBallState(NavigatorState):
     # 0.1 sec on a speed of 200 is ~15deg rotation
@@ -23,7 +24,11 @@ class ReturnBallState(NavigatorState):
     def update(self):
         if self.context.zones.at_collection():
             print("at collection")
-            return
+
+            self.context.zumo.run("stop")
+            self.context.zumo.run("move", -self.speed)
+
+            self.context.transition_to(GoToZoneState(self.rotation))
 
         self.target_rotation = self.calculate_target_rotation()
 
@@ -52,8 +57,7 @@ class ReturnBallState(NavigatorState):
 
             time.sleep(time_to_turn)
 
-            self.context.zumo.run("stop ")
-            time.sleep(0.1)
+            self.slow_stop(5, 0.1)
 
         elif self.is_right(rotation_difference):
             rotation_angle = abs(rotation_difference)
@@ -71,19 +75,18 @@ class ReturnBallState(NavigatorState):
 
             time.sleep(time_to_turn)
 
-            self.context.zumo.run("stop ")
-            time.sleep(0.1)
+            self.slow_stop(5, 0.1)
 
         print((rotation_difference, distance, self.target_rotation, self.rotation))
 
     def is_middle(self, rotation: float) -> bool:
-        return rotation >= -10 and rotation <= 10
+        return rotation >= -5 and rotation <= 5
 
     def is_right(self, rotation: float) -> bool:
-        return rotation < -10
+        return rotation < -5
 
     def is_left(self, rotation: float) -> bool:
-        return rotation > 10
+        return rotation > 5
 
     def slow_stop(self, steps: int, wait_time: float) -> None:
         for i in range(0, steps):

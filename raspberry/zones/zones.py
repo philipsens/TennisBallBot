@@ -25,6 +25,36 @@ class Zones:
     api = None
     scanner = None
 
+    # collection_margin = {
+    #     Collection.TOP_LEFT: {"left": 50, "top": 50, "right": 50, "bottom": 50},
+    #     Collection.TOP_RIGHT: {"left": 50, "top": 50, "right": 50, "bottom": 50},
+    #     Collection.BOT_LEFT: {"left": 50, "top": 50, "right": 50, "bottom": 50},
+    #     Collection.BOT_RIGHT: {"left": 50, "top": 50, "right": 50, "bottom": 50}
+    # }
+
+    # zone_position = {
+    #     Zone.TOP_TOP: (0, -125),
+    #     Zone.TOP_LEFT: (-100, -25),
+    #     Zone.TOP_CENTER: (0, -25),
+    #     Zone.TOP_RIGHT: (100, -25),
+    #     Zone.BOT_LEFT: (-100, 25),
+    #     Zone.BOT_CENTER: (0, 50),
+    #     Zone.BOT_RIGHT: (100, 25),
+    #     Zone.BOT_BOT: (0, 125)
+    # }
+
+    # zone_margin = {
+    #     Zone.TOP_TOP: {"left": 75, "top": 0, "right": 75, "bottom": 50},
+    #     Zone.TOP_LEFT: {"left": 25, "top": 50, "right": 25, "bottom": 25},
+    #     Zone.TOP_CENTER: {"left": 75, "top": 50, "right": 75, "bottom": 25},
+    #     Zone.TOP_RIGHT: {"left": 25, "top": 50, "right": 25, "bottom": 25},
+    #     Zone.BOT_LEFT: {"left": 25, "top": 25, "right": 25, "bottom": 50},
+    #     Zone.BOT_CENTER: {"left": 75, "top": 50, "right": 75, "bottom": 25},
+    #     Zone.BOT_RIGHT: {"left": 25, "top": 25, "right": 25, "bottom": 50},
+    #     Zone.BOT_BOT: {"left": 75, "top": 50, "right": 75, "bottom": 0}
+    # }
+
+    ## Test settings
     collection_margin = {
         Collection.TOP_LEFT: {"left": 25, "top": 25, "right": 25, "bottom": 25},
         Collection.TOP_RIGHT: {"left": 25, "top": 25, "right": 25, "bottom": 25},
@@ -138,8 +168,23 @@ class Zones:
 
         return self.scanner.beacons[id].position
 
+    def selected_zone_position(self) -> Tuple[int, int]:
+        id = self.selected_zone().value
+
+        return self.zone_position[id]
+
     def selected_collection_rotation(self, x: float, y: float) -> float:
         (col_x, col_y) = self.selected_collection_position()
+
+        delta_x = x + col_x
+        delta_y = y + col_y
+
+        rotation_radian = math.atan2(delta_x, delta_y)
+
+        return math.degrees(rotation_radian)
+
+    def selected_zone_rotation(self, x: float, y: float) -> float:
+        (zone_x, zone_y) = self.selected_collection_position()
 
         delta_x = x + col_x
         delta_y = y + col_y

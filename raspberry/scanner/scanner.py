@@ -19,6 +19,14 @@ class BLEScanner:
 
         beacon_size = 50
 
+        # self.beacons = [  # Every beacon is 2 meter apart from each other
+        #     BLEBeacon(beacon_size, (-100, 100)),
+        #     BLEBeacon(beacon_size, (100, 100)),
+        #     BLEBeacon(beacon_size, (-100, -100)),
+        #     BLEBeacon(beacon_size, (100, -100))
+        # ]
+
+        ## Test settings
         self.beacons = [  # Every beacon is 1 meter apart from each other
             BLEBeacon(beacon_size, (-50, 50)),
             BLEBeacon(beacon_size, (50, 50)),
