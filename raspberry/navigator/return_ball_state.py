@@ -14,6 +14,7 @@ class ReturnBallState(NS.NavigatorState):
 
     rotation = None
     position = None
+    last_command = None
 
     steps_forward = 0
     
@@ -30,63 +31,87 @@ class ReturnBallState(NS.NavigatorState):
 
             self.context.transition_to(GTZS.GoToZoneState(self.rotation))
 
-        self.target_rotation = self.calculate_target_rotation()
-
         rotation_difference = self.rotation - self.target_rotation
         distance = self.calculate_target_distance()
 
         if self.is_middle(rotation_difference):
             print("forward")
             self.context.zumo.run("move", self.speed)
+            self.last_command = "move"
+            
             time.sleep(0.1)
             
-
+            
         elif self.is_left(rotation_difference):
+
+            if self.last_command == "move":
+                self.slow_stop(10, 1)
+
             rotation_angle = abs(rotation_difference)
             max_turn_radius = 90
             max_time_to_turn = 2
 
             required_time = (rotation_angle / max_turn_radius) * 2
+            angle_to_turn = min(rotation_angle, max_turn_radius)
 
             time_to_turn = min(required_time, max_time_to_turn)
 
-            self.rotation -= min(rotation_difference, max_turn_radius)
+            self.rotation -= rotation_angle
             self.context.zumo.run("left", self.turning_speed)
+            self.last_command = "left"
 
-            print("left: time to turn: %s, rot diff: %s" % (time_to_turn, rotation_difference))
+            print("left: time to turn: %s, rot diff: %s" % (time_to_turn, angle_to_turn))
 
             time.sleep(time_to_turn)
 
-            self.slow_stop(5, 0.1)
+            self.context.zumo.run("left", 0)
+            time.sleep(0.1)
+
+            self.context.zumo.run("stop")
+            time.sleep(0.25)
+
+            self.target_rotation = self.calculate_target_rotation()
 
         elif self.is_right(rotation_difference):
+
+            if self.last_command == "move":
+                self.slow_stop(10, 1)
+
             rotation_angle = abs(rotation_difference)
             max_turn_radius = 90
             max_time_to_turn = 2
 
             required_time = (rotation_angle / max_turn_radius) * 2
+            angle_to_turn = min(rotation_angle, max_turn_radius)
 
             time_to_turn = min(required_time, max_time_to_turn)
 
-            self.rotation -= min(rotation_difference, max_turn_radius)
+            self.rotation += angle_to_turn
             self.context.zumo.run("right", self.turning_speed)
+            self.last_command = "right"
 
-            print("right: time to turn: %s, rot diff: %s" % (time_to_turn, rotation_difference))
+            print("right: time to turn: %s, rot diff: %s" % (time_to_turn, angle_to_turn))
 
             time.sleep(time_to_turn)
 
-            self.slow_stop(5, 0.1)
+            self.context.zumo.run("right", 0)
+            time.sleep(0.1)
+
+            self.context.zumo.run("stop")
+            time.sleep(0.25)
+
+            self.target_rotation = self.calculate_target_rotation()
 
         print((rotation_difference, distance, self.target_rotation, self.rotation))
 
     def is_middle(self, rotation: float) -> bool:
-        return rotation >= -5 and rotation <= 5
+        return rotation >= -10 and rotation <= 10
 
     def is_right(self, rotation: float) -> bool:
-        return rotation < -5
+        return rotation < -10
 
     def is_left(self, rotation: float) -> bool:
-        return rotation > 5
+        return rotation > 10
 
     def slow_stop(self, steps: int, wait_time: float) -> None:
         for i in range(0, steps):
@@ -118,7 +143,7 @@ class ReturnBallState(NS.NavigatorState):
         self.context.zumo.run("honk")
 
         # wait for beacons
-        time.sleep(10)
+        time.sleep(20)
 
         self.context.scanner.update_location()
 
@@ -126,13 +151,13 @@ class ReturnBallState(NS.NavigatorState):
         self.context.zumo.run("honk")
 
         self.context.zumo.run("move", self.speed)
-        time.sleep(2)
+        time.sleep(1.75)
 
         print("stop")
         self.slow_stop(10, 1)
 
         # wait for beacons
-        time.sleep(10)
+        time.sleep(20)
 
         self.context.scanner.update_location()
 

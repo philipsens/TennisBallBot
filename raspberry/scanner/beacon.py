@@ -38,3 +38,6 @@ class BLEBeacon:
     def avg(self) -> float:
         sum_results = sum(self.results)
         return sum_results / self.max_len
+
+    def last(self) -> float:
+        return self.results[self.index]

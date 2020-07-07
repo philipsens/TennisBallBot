@@ -3,7 +3,7 @@ import time
 import navigator.navigator_state as NS
 import navigator.search_ball_state as SBS
 
-class SearchBallState(NS.NavigatorState):
+class GoToZoneState(NS.NavigatorState):
 
     rotation = 0
     target_rotation = 0

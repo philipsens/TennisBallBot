@@ -95,7 +95,7 @@ class Zones:
         margin = self.collection_margin[collection]
 
         beacon_pos = self.selected_collection_position()
-        cart_pos = self.scanner.cart_position()
+        cart_pos = self.scanner.current_cart_pos()
 
         beacon_margin_left      = float(beacon_pos[0] - margin["left"])
         beacon_margin_top       = float(beacon_pos[1] + margin["top"])
@@ -135,7 +135,7 @@ class Zones:
         margin = self.zone_margin[zone]
 
         zone_pos = self.zone_position[zone]
-        cart_pos = self.scanner.cart_position()
+        cart_pos = self.scanner.current_cart_pos()
 
         zone_margin_left      = float(zone_pos[0] - margin["left"])
         zone_margin_top       = float(zone_pos[1] + margin["top"])
