@@ -176,8 +176,12 @@ class Zones:
     def selected_collection_rotation(self, x: float, y: float) -> float:
         (col_x, col_y) = self.selected_collection_position()
 
-        delta_x = x + col_x
-        delta_y = y + col_y
+        delta_x = x - col_x
+        delta_y = y - col_y
+
+        print("col x: %s, x: %s" % (col_x, x))
+        print("col y: %s, y: %s" % (col_y, y))
+        print((delta_x, delta_y))
 
         rotation_radian = math.atan2(delta_x, delta_y)
 
@@ -186,8 +190,8 @@ class Zones:
     def selected_zone_rotation(self, x: float, y: float) -> float:
         (zone_x, zone_y) = self.selected_collection_position()
 
-        delta_x = x + col_x
-        delta_y = y + col_y
+        delta_x = x - zone_x
+        delta_y = y - zone_y
 
         rotation_radian = math.atan2(delta_x, delta_y)
 

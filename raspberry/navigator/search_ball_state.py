@@ -5,6 +5,7 @@ class SearchBallState(NS.NavigatorState):
     
     def start(self):
         self.context.detector.unpause()
+        print("search ball state")
 
     def update(self):
         if self.context.detector.is_done():

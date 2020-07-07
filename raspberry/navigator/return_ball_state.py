@@ -7,7 +7,7 @@ class ReturnBallState(NS.NavigatorState):
     # 0.1 sec on a speed of 200 is ~15deg rotation
     # 0.2 sec on a speed of 200 is ~22deg rotation
     # 2 sec on a speed of 150 is ~90 deg rotation
-    speed = 200
+    speed = 220
     turning_speed = 150
 
     target_rotation = None
@@ -17,6 +17,8 @@ class ReturnBallState(NS.NavigatorState):
     last_command = None
 
     steps_forward = 0
+
+    collection_counter = 0
     
     def start(self):
         self.rotation = self.calculate_start_rotation()
@@ -24,12 +26,22 @@ class ReturnBallState(NS.NavigatorState):
 
     def update(self):
         if self.context.zones.at_collection():
+            self.collection_counter += 1
             print("at collection")
 
             self.context.zumo.run("stop")
-            self.context.zumo.run("move", -self.speed)
 
-            self.context.transition_to(GTZS.GoToZoneState(self.rotation))
+            if self.collection_counter > 10:
+               self.context.zumo.run("move", -self.speed)
+ 
+               time.sleep(1.5)
+
+               self.context.zumo.run("stop")
+               self.context.transition_to(GTZS.GoToZoneState(self.rotation))
+
+            return
+
+        self.collection_counter = 0
 
         rotation_difference = self.rotation - self.target_rotation
         distance = self.calculate_target_distance()
@@ -137,8 +149,6 @@ class ReturnBallState(NS.NavigatorState):
 
     def calculate_start_rotation(self) -> float:
         print("go")
-
-        print(self.context.zumo)
 
         self.context.zumo.run("honk")
 
