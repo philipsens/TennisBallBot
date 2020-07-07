@@ -7,6 +7,7 @@ from detector.detector import Detector
 from navigator.navigator import Navigator
 from navigator.return_ball_state import ReturnBallState
 from navigator.search_ball_state import SearchBallState
+from navigator.go_to_zone_state import GoToZoneState
 
 import time
 

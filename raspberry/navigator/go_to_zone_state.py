@@ -21,6 +21,7 @@ class GoToZoneState(NS.NavigatorState):
         pass 
     
     def start(self):
+        self.start_position()
         self.target_rotation = self.calculate_target_rotation()
 
     def update(self):
@@ -40,6 +41,7 @@ class GoToZoneState(NS.NavigatorState):
             time.sleep(0.1)
 
         elif self.is_left(rotation_difference):
+            print("go left")
 
             rotation_angle = abs(rotation_difference)
             max_turn_radius = 90
@@ -66,6 +68,7 @@ class GoToZoneState(NS.NavigatorState):
             self.target_rotation = self.calculate_target_rotation()
 
         elif self.is_right(rotation_difference):
+            print("go right")
 
             rotation_angle = abs(rotation_difference)
             max_turn_radius = 90
@@ -107,7 +110,9 @@ class GoToZoneState(NS.NavigatorState):
     def start_position(self) -> None:
         print("Waiting for position...")
         time.sleep(20)
-        self.position = self.context.scanner.update_location()
+        self.context.scanner.update_location()
+
+        self.position = self.context.scanner.cart_position()
 
     def calculate_target_rotation(self) -> float:
         return self.context.zones.selected_zone_rotation(

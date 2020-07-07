@@ -169,7 +169,7 @@ class Zones:
         return self.scanner.beacons[id].position
 
     def selected_zone_position(self) -> Tuple[int, int]:
-        id = self.selected_zone().value
+        id = self.selected_zone()
 
         return self.zone_position[id]
 
@@ -184,7 +184,7 @@ class Zones:
         return math.degrees(rotation_radian)
 
     def selected_zone_rotation(self, x: float, y: float) -> float:
-        (zone_x, zone_y) = self.selected_collection_position()
+        (zone_x, zone_y) = self.selected_zone_position()
 
         delta_x = zone_x - x
         delta_y = zone_y - x
