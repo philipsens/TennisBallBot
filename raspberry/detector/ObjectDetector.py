@@ -47,7 +47,7 @@ class ObjectDetector:
         out = cv2.VideoWriter('output.avi', -1, 20.0, (640, 480))
 
         while self.running:
-            # self.frame_rate.reset()
+            self.frame_rate.reset()
 
             # if paused, just sleep and check again
             if self.paused:
@@ -70,8 +70,8 @@ class ObjectDetector:
                 print(detections)
 
 
-            # self.frame_rate.calculate()
-            # print(self.frame_rate.frame_rate_calculation)
+            self.frame_rate.calculate()
+            print(self.frame_rate.frame_rate_calculation)
 
         self.video_stream.stop()
 
