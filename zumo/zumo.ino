@@ -12,7 +12,7 @@ void processToken(const char* identifier, const char* value) {
     if (strcmp(identifier, "move") == 0) {
         int16_t speed = atoi(value);
 
-        motor.leftTrack(speed * 1.1); // Composate because the left side is heavier then the right side
+        motor.leftTrack(speed);
         motor.rightTrack(speed);
         motor.update();
 
@@ -56,8 +56,8 @@ void processToken(const char* identifier, const char* value) {
     if (strcmp(identifier, "center-right") == 0) {
         int16_t speed = atoi(value);
 
-        motor.leftTrack(-speed);
-        motor.rightTrack(speed);
+        motor.leftTrack(speed);
+        motor.rightTrack(-speed);
         motor.update();
 
         Serial.print("center-right=");

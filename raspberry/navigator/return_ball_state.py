@@ -26,22 +26,21 @@ class ReturnBallState(NS.NavigatorState):
 
     def update(self):
         if self.context.zones.at_collection():
-            self.collection_counter += 1
+
             print("at collection")
 
             self.context.zumo.run("stop")
+            time.sleep(0.1)
 
-            if self.collection_counter > 10:
-               self.context.zumo.run("move", -self.speed)
+            self.context.zumo.run("move", -self.speed)
  
-               time.sleep(1.5)
+            time.sleep(1.5)
 
-               self.context.zumo.run("stop")
-               self.context.transition_to(GTZS.GoToZoneState(self.rotation))
+            self.context.zumo.run("stop")
+            self.context.transition_to(GTZS.GoToZoneState(self.rotation))
 
             return
 
-        self.collection_counter = 0
 
         rotation_difference = self.rotation - self.target_rotation
         distance = self.calculate_target_distance()
@@ -51,7 +50,7 @@ class ReturnBallState(NS.NavigatorState):
             self.context.zumo.run("move", self.speed)
             self.last_command = "move"
             
-            time.sleep(0.1)
+            time.sleep(0.05)
             
             
         elif self.is_left(rotation_difference):
@@ -68,7 +67,7 @@ class ReturnBallState(NS.NavigatorState):
 
             time_to_turn = min(required_time, max_time_to_turn)
 
-            self.rotation -= rotation_angle
+            self.rotation -= angle_to_turn
             self.context.zumo.run("left", self.turning_speed)
             self.last_command = "left"
 
@@ -164,7 +163,7 @@ class ReturnBallState(NS.NavigatorState):
         time.sleep(1.75)
 
         print("stop")
-        self.slow_stop(10, 1)
+        self.slow_stop(10, 1.25)
 
         # wait for beacons
         time.sleep(20)

@@ -29,7 +29,7 @@ if __name__ == '__main__':
         detector.start()
         webserver.start()
 
-        navigator.transition_to(ReturnBallState())
+        navigator.transition_to(SearchBallState())
 
         while True:
             navigator.update()
