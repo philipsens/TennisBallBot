@@ -1,5 +1,16 @@
 # 🎾🤖 TennisBallBot
 
+## Diagrams
+
+### Domain
+
+![domain](assets/diagrams/domain.png)
+
+### Application
+
+![application](assets/diagrams/application.png)
+
+
 ## Installation 
 
 ### 🍰 Raspberry pi
