@@ -24,7 +24,7 @@ class GoToZoneState(NS.NavigatorState):
         self.target_rotation = self.calculate_target_rotation()
 
     def update(self):
-        if self.context.zone.in_zone():
+        if self.context.zones.in_zone():
             print("in zone")
             self.context.zumo.run("stop")
 
