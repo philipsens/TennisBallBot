@@ -61,7 +61,6 @@ class ObjectDetector:
 
             detections = self.get_confident_detections(boxes, classes, scores)
 
-            cv2.imshow('Object detector', frame)
             out.write(frame)
 
             if cv2.waitKey(1) == ord('q'):
