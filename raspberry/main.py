@@ -8,7 +8,7 @@ from detector.detector import Detector
 import time
 
 if __name__ == '__main__':
-    print("Starting TennisBallBot 🤖")
+    print("Starting TennisBallBot 🎾🤖")
 
     zumo = Zumo("/dev/ttyACM0")
     scanner = BLEScanner("00000000-0000-0000-0000-000000000000")
