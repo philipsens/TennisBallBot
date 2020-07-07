@@ -2,7 +2,6 @@ import os
 import time
 
 import cv2
-from skvideo.io import VideoWriter
 
 from .Detection import Detection
 from .FrameRate import FrameRate
@@ -45,8 +44,6 @@ class ObjectDetector:
         time.sleep(1)
 
     def update(self, callback):
-        out = VideoWriter('output.mjpg', frameSize=(640, 480))
-        out.open()
 
         while self.running:
             self.frame_rate.reset()
@@ -63,7 +60,7 @@ class ObjectDetector:
 
             detections = self.get_confident_detections(boxes, classes, scores)
 
-            out.write(frame)
+            cv2.imshow('Object detector', frame)
 
             if cv2.waitKey(1) == ord('q'):
                 break
@@ -78,7 +75,6 @@ class ObjectDetector:
             print(self.frame_rate.frame_rate_calculation)
 
         self.video_stream.stop()
-        out.release()
 
     def get_confident_detections(self, boxes, classes, scores):
         detections = []
