@@ -17,8 +17,16 @@ class BLEScanner:
                                      device_filter=IBeaconFilter(uuid=uuid)
                                      )
 
-        beacon_size = 50
+        beacon_size = 200
 
+        # self.beacons = [  # Every beacon is 2 meter apart from each other
+        #     BLEBeacon(beacon_size, (-100, 100)),
+        #     BLEBeacon(beacon_size, (100, 100)),
+        #     BLEBeacon(beacon_size, (-100, -100)),
+        #     BLEBeacon(beacon_size, (100, -100))
+        # ]
+
+        ## Test settings
         self.beacons = [  # Every beacon is 1 meter apart from each other
             BLEBeacon(beacon_size, (-50, 50)),
             BLEBeacon(beacon_size, (50, 50)),
@@ -78,15 +86,57 @@ class BLEScanner:
 
         return horizontal, vertical
 
+    def current_cart_pos(self) -> Tuple[float, float]:
+        distance_horizontal = abs(self.beacons[0].position[0] - self.beacons[1].position[0])
+        distance_vertical = abs(self.beacons[0].position[1] - self.beacons[2].position[1])
+
+        min_top_horizontal = self.beacons[0].position[0] + self.beacons[0].last()
+        min_bot_horizontal = self.beacons[2].position[0] + self.beacons[2].last()
+
+        space_top_horizontal = distance_horizontal - (self.beacons[0].last() + self.beacons[1].last())
+        space_bot_horizontal = distance_horizontal - (self.beacons[2].last() + self.beacons[3].last())
+
+        min_left_vertical = self.beacons[2].position[1] + self.beacons[2].last()
+        min_right_vertical = self.beacons[3].position[1] + self.beacons[3].last()
+
+        space_left_vertical = distance_vertical - (self.beacons[0].last() + self.beacons[2].last())
+        space_right_vertical = distance_vertical - (self.beacons[1].last() + self.beacons[3].last())
+
+        # Find the closest average distance of the 2 beacons
+        # and use those are more "accurate" beacons
+        top_last_distance = self.beacons[0].last() + self.beacons[1].last()
+        bot_last_distance = self.beacons[2].last() + self.beacons[3].last()
+
+        left_last_distance = self.beacons[0].last() + self.beacons[2].last()
+        right_last_distance = self.beacons[1].last() + self.beacons[3].last()
+
+        # Pick side determined by the biggest average
+        if right_last_distance < left_last_distance:
+            vertical_radius = space_right_vertical / 2
+            vertical = min_right_vertical + vertical_radius
+        else:
+            vertical_radius = space_left_vertical / 2
+            vertical = min_left_vertical + vertical_radius
+
+        if top_last_distance < bot_last_distance:
+            horizontal_radius = space_top_horizontal / 2
+            horizontal = min_top_horizontal + horizontal_radius
+        else:
+            horizontal_radius = space_bot_horizontal / 2
+            horizontal = min_bot_horizontal + horizontal_radius
+
+        return horizontal, vertical
+
     def update_location(self) -> None:
         self.last_beacon_location = self.current_beacon_location
         self.current_beacon_location = self.cart_position()
 
     def cart_rotation(self) -> float:
-        x = self.current_beacon_location[0] - self.last_beacon_location[0]
-        y = self.current_beacon_location[1] - self.last_beacon_location[1]
 
-        rotation_radian = math.atan2(x, y)
+        delta_x = self.current_beacon_location[0] - self.last_beacon_location[0]
+        delta_y = self.current_beacon_location[1] - self.last_beacon_location[1]
+
+        rotation_radian = math.atan2(delta_x, delta_y)
 
         return math.degrees(rotation_radian)
 

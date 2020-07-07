@@ -15,8 +15,8 @@ ZONE_URI = API_URI + 'zone'
 COLLECTION_URI = API_URI + 'collection'
 COLLECTION_MODE_URI = API_URI + 'collection_mode'
 
-zone = 1
-collection = 0
+zone = 6
+collection = 2
 collection_mode = COLLECTION_MODE_ZONE
 
 

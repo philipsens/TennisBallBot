@@ -4,6 +4,10 @@ from zumo.zumo import Zumo
 from webserver.webserver import Webserver
 from zones.zones import Zones
 from detector.detector import Detector
+from navigator.navigator import Navigator
+from navigator.return_ball_state import ReturnBallState
+from navigator.search_ball_state import SearchBallState
+from navigator.go_to_zone_state import GoToZoneState
 
 import time
 
@@ -16,6 +20,7 @@ if __name__ == '__main__':
     webserver = Webserver("0.0.0.0")
     zones = Zones(webserver, scanner)
 
+    navigator = Navigator(scanner, detector, zones, zumo)
     plotter = Plotter(scanner, zones)
 
     try:
@@ -24,10 +29,10 @@ if __name__ == '__main__':
         detector.start()
         webserver.start()
 
-        # temp: Only to show off the detector working
-        time.sleep(5)
+        navigator.transition_to(SearchBallState())
 
-        detector.unpause()
+        while True:
+            navigator.update()
 
     except KeyboardInterrupt:
         zumo.run('stop')

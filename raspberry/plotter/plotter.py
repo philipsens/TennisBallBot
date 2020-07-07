@@ -1,5 +1,6 @@
 import threading
 import time
+import random
 
 import pygame
 
@@ -10,10 +11,10 @@ class Plotter(threading.Thread):
     stop_thread = False
 
     screen = None
+    zone_colours = {}
 
     # screen dimensions are 500px x 500px
     screen_dimensions = (500, 500)
-    # Field is 150cm x 150cm
     field = (150, 150)
 
     # pixel ratio
@@ -44,14 +45,24 @@ class Plotter(threading.Thread):
             self.screen_dimensions[0] / self.field[0], self.screen_dimensions[1] / self.field[1]
         )
         self.center = (self.screen_dimensions[0] // 2, self.screen_dimensions[1] // 2)
+        self.generate_zone_colours()
 
     def clear(self) -> None:
         self.screen.fill((255, 255, 255))
+
+    def generate_zone_colours(self) -> None:
+        for zone, pos in self.zones.zone_position.items():
+            r = random.randrange(0, 255)
+            g = random.randrange(0, 255)
+            b = random.randrange(0, 255)
+
+            self.zone_colours[zone] = (r, g, b)
 
     def render(self) -> None:
         self.clear()
 
         self.render_collection_zones()
+        self.render_zones()
         self.render_beacons()
         self.render_cart()
 
@@ -87,8 +98,8 @@ class Plotter(threading.Thread):
             x = (self.center[0] + int(beacon.position[0] * self.ratio_x))
             y = (self.center[1] - int(beacon.position[1] * self.ratio_y))
 
-            zone = self.zones.collection_from_beacon_id(id)
-            margin = self.zones.collection_margin[zone]
+            collection = self.zones.collection_from_beacon_id(id)
+            margin = self.zones.collection_margin[collection]
 
             surface = pygame.Surface(self.screen_dimensions)
             surface.set_colorkey((0, 0, 0))
@@ -105,8 +116,24 @@ class Plotter(threading.Thread):
             self.screen.blit(surface, (0, 0))
 
     def render_zones(self) -> None:
-        pass
+        for zone, pos in self.zones.zone_position.items():
+            x = (self.center[0] + int(pos[0] * self.ratio_x))
+            y = (self.center[1] + int(pos[1] * self.ratio_y))
 
+            margin = self.zones.zone_margin[zone]
+
+            surface = pygame.Surface(self.screen_dimensions)
+            surface.set_colorkey((0, 0, 0))
+            surface.set_alpha(128)
+
+            rect_x = float(x - (margin["left"] * self.ratio_x))
+            rect_y = float(y - (margin["top"] * self.ratio_y))
+
+            rect_width  = float(margin["left"] + margin["right"]) * self.ratio_x
+            rect_height = float(margin["top"] + margin["bottom"]) * self.ratio_y
+
+            pygame.draw.rect(surface, self.zone_colours[zone], (rect_x, rect_y, rect_width, rect_height))
+            self.screen.blit(surface, (0, 0))
 
     def render_cart(self) -> None:
         (cart_x, cart_y) = self.scanner.cart_position()
