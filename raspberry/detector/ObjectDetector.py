@@ -76,6 +76,7 @@ class ObjectDetector:
             print(self.frame_rate.frame_rate_calculation)
 
         self.video_stream.stop()
+        out.release()
 
     def get_confident_detections(self, boxes, classes, scores):
         detections = []
