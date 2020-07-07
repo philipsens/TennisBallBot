@@ -15,7 +15,7 @@
 
 ### 🍰 Raspberry pi
 
-* Update the rapsberry pi's code bij executing the following two lines.
+* Update the Raspberry pP's code bij executing the following two lines.
 
 ```
 sudo apt update
@@ -26,11 +26,12 @@ sudo apt full-upgrade
 
 * Execute `./raspberry/install_dependencies.sh`.
 
-* Change workdir to the webapp folder `cd raspberry/webserver/webapp`.
+* Change your work directory to the webapp folder `cd raspberry/webserver/webapp`.
 
 * Create an environment file `cp .env.example .env.local`.
 
-* Fill in the api uri, this should be the ip of the `http://` + raspberry pi + `/api/` note the trailing slash.
+* Fill in the api uri, this should be the IP of the Raspberry: `http://` + IP + `/api/` note the trailing slash.
+    * Alternatively you can just do `/api/`.
 
 * Execute `npm install && npm run build`.
 
@@ -64,7 +65,7 @@ To train the Tensorflow Lite model follow the tutorials from EdjeElectronics:
 
 * https://github.com/EdjeElectronics/TensorFlow-Lite-Object-Detection-on-Android-and-Raspberry-Pi
 
-After this you should follow some steps to convert the model to a edgetpu model (runnable for the Google Coral) 
+After this you should follow some steps to convert the model to a EdgeTPU model (runnable for the Google Coral) 
 
 * Install `edgetpu-compiler`:
 
