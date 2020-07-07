@@ -1,6 +1,8 @@
 import os
 import time
 
+import cv2
+
 from .Detection import Detection
 from .FrameRate import FrameRate
 from .Model import Model
@@ -42,6 +44,8 @@ class ObjectDetector:
         time.sleep(1)
 
     def update(self, callback):
+        out = cv2.VideoWriter('output.avi', -1, 20.0, (640, 480))
+
         while self.running:
             # self.frame_rate.reset()
 
@@ -57,10 +61,13 @@ class ObjectDetector:
 
             detections = self.get_confident_detections(boxes, classes, scores)
 
+            out.write(frame)
+
             if callback and detections:
                 callback(detections)
             elif detections:
                 print(detections)
+
 
             # self.frame_rate.calculate()
             # print(self.frame_rate.frame_rate_calculation)
