@@ -44,8 +44,6 @@ class ObjectDetector:
         time.sleep(1)
 
     def update(self, callback):
-        out = cv2.VideoWriter('output.mp4', -1, 20.0, (640, 480))
-
         while self.running:
             self.frame_rate.reset()
 
@@ -62,7 +60,6 @@ class ObjectDetector:
             detections = self.get_confident_detections(boxes, classes, scores)
 
             cv2.imshow('Object detector', frame)
-            out.write(frame)
 
             if cv2.waitKey(1) == ord('q'):
                 break
