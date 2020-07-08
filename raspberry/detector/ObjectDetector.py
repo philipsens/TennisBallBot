@@ -14,8 +14,8 @@ class ObjectDetector:
     GRAPH_NAME = 'edgetpu.tflite'
     LABELMAP_NAME = 'labelmap.txt'
     MIN_CONFIDENCE_THRESHOLD = 0.5
-    RESOLUTION_WIDTH = 1280
-    RESOLUTION_HEIGHT = 720
+    RESOLUTION_WIDTH = 640
+    RESOLUTION_HEIGHT = 360
 
     paused = True
     running = True
