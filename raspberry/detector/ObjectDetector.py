@@ -58,7 +58,32 @@ class ObjectDetector:
             self.model.run()
             boxes, classes, scores = self.model.get_detection_results()
 
-            detections = self.get_confident_detections(boxes, classes, scores)
+            detections = []
+            for i in range(len(scores)):
+                if (scores[i] > self.MIN_CONFIDENCE_THRESHOLD) and (scores[i] <= 1.0):
+                    detections.append(Detection(boxes[i], classes[i], scores[i]))
+
+                    ymin = int(max(1, (boxes[i][0] * self.RESOLUTION_HEIGHT)))
+                    xmin = int(max(1, (boxes[i][1] * self.RESOLUTION_WIDTH)))
+                    ymax = int(min(self.RESOLUTION_HEIGHT, (boxes[i][2] * self.RESOLUTION_HEIGHT)))
+                    xmax = int(min(self.RESOLUTION_WIDTH, (boxes[i][3] * self.RESOLUTION_WIDTH)))
+
+                    cv2.rectangle(frame, (xmin, ymin), (xmax, ymax), (10, 255, 0), 2)
+
+                    # Draw label
+                    object_name = self.model.labels[int(classes[i])]  # Look up object name from "labels" array using class index
+                    label = '%s: %d%%' % (object_name, int(scores[i] * 100))  # Example: 'person: 72%'
+                    labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.7, 2)  # Get font size
+                    label_ymin = max(ymin, labelSize[1] + 10)  # Make sure not to draw label too close to top of window
+                    cv2.rectangle(frame, (xmin, label_ymin - labelSize[1] - 10),
+                                  (xmin + labelSize[0], label_ymin + baseLine - 10), (255, 255, 255),
+                                  cv2.FILLED)  # Draw white box to put label text in
+                    cv2.putText(frame, label, (xmin, label_ymin - 7), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0),
+                                2)  # Draw label text
+
+            # Draw framerate in corner of frame
+            cv2.putText(frame, 'FPS: {0:.2f}'.format(self.frame_rate.frame_rate_calculation), (30, 50), cv2.FONT_HERSHEY_SIMPLEX, 1,
+                            (255, 255, 0), 2, cv2.LINE_AA)
 
             cv2.imshow('Object detector', frame)
 
@@ -70,18 +95,9 @@ class ObjectDetector:
             elif detections:
                 print(detections)
 
-
             self.frame_rate.calculate()
-            print(self.frame_rate.frame_rate_calculation)
 
         self.video_stream.stop()
-
-    def get_confident_detections(self, boxes, classes, scores):
-        detections = []
-        for i in range(len(scores)):
-            if (scores[i] > self.MIN_CONFIDENCE_THRESHOLD) and (scores[i] <= 1.0):
-                detections.append(Detection(boxes[i], classes[i], scores[i]))
-        return detections
 
     def stop(self):
         self.running = False
