@@ -24,7 +24,7 @@ if __name__ == '__main__':
     plotter = Plotter(scanner, zones)
 
     try:
-        plotter.start()
+        # plotter.start()
         scanner.start()
         detector.start()
         webserver.start()
