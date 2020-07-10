@@ -3,50 +3,47 @@ import serial
 import time
 from queue import Queue
 
-class Zumo(threading.Thread):
 
-    queue = Queue()
+'''
+The commands accepted by the Zumo are the following
 
-    stop_thread = False
+Command     Range
+------------------------------
+move        [-400, 400]
+left        [-400, 400]
+right       [-400, 400]
+
+center-left   [-400, 400]
+center-right  [-400, 400]
+
+honk # honk honk
+stop # stops both tracks
+
+'''
+
+
+class Zumo:
+    running = True
     serial_connection = None
+
+    lock = threading.Lock()
 
     def __init__(self, port: str) -> None:
         threading.Thread.__init__(self)
         self.serial_connection = serial.Serial(port, 115200)
 
-    def add(self, identifier: str, value: int) -> None:
-        self.queue.put((identifier, value))
 
-    def run(self):
-        if (not self.serial_connection.is_open):
-            print("Cannot open serial connection")
-            return
+    def run(self, identifier: str, value: int = 0) -> None:
 
-        while self.stop_thread == False:
-            if (self.queue.empty()):
-                time.sleep(0.25)
-                continue
+        with self.lock:
+            if not self.serial_connection.is_open:
+                print("Serial connection is closed")
+                return
 
-            message = self.compose_message()
+            while self.serial_connection.inWaiting() > 0:
+                # Clear out buffer (else the Serial connection becomes really slow)
+                self.serial_connection.read(1)
 
-            print(message)
+            message = identifier + "=" + str(value) + ";\r\n"
 
             self.serial_connection.write(bytes(message, encoding="ascii"))
-
-    def compose_message(self) -> str:
-        messages = []
-
-        while not self.queue.empty():
-            identifier, value = self.queue.get()
-
-            message = identifier + "=" + str(value)
-            messages.append(message)
-
-        return ';'.join(messages) + "\r\n"
-
-    def stop(self) -> None:
-        self.stop_thread = True
-        self.join()
-        self.serial_connection.close()
-
-    

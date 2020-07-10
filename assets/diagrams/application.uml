@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>Python</ID>
+  <OriginalElement>#C:/Users/Sergi/Documents/HSL/IROB/TennisBallBot/raspberry</OriginalElement>
+  <nodes>
+    <node x="4647.236204013378" y="835.0">detector.VideoStream.VideoStream</node>
+    <node x="4032.2362040133785" y="813.0">detector.Detection.Detection</node>
+    <node x="642.2362040133783" y="846.0">detector.FrameRate.FrameRate</node>
+    <node x="4308.2362040133785" y="758.0">enum.Enum</node>
+    <node x="3073.2362040133785" y="670.0">detector.ObjectDetector.ObjectDetector</node>
+    <node x="402.236204013378" y="1619.0">navigator.navigator_state.NavigatorState</node>
+    <node x="1643.7547380156075" y="1388.0">detector.detector.Detector</node>
+    <node x="1446.2362040133783" y="780.0">threading.Thread</node>
+    <node x="4955.236204013378" y="769.0">scanner.scanner.BLEScanner</node>
+    <node x="1200.2362040133783" y="879.0">zumo.zumo.Zumo</node>
+    <node x="918.2362040133783" y="626.0">detector.Model.Model</node>
+    <node x="4489.7362040133785" y="1618.0">zones.zones.Zone</node>
+    <node x="0.0" y="2128.0">navigator.return_ball_state.ReturnBallState</node>
+    <node x="3429.2362040133785" y="791.0">scanner.beacon.BLEBeacon</node>
+    <node x="3744.2362040133785" y="802.0">navigator.navigator.Navigator</node>
+    <node x="1960.194955406912" y="1619.0">webserver.webserver.Webserver</node>
+    <node x="2760.2362040133785" y="758.0">zones.zones.Zones</node>
+    <node x="768.0" y="2358.0">navigator.search_ball_state.SearchBallState</node>
+    <node x="534.2362040133783" y="945.0">abc.ABC</node>
+    <node x="4261.7362040133785" y="1662.0">zones.zones.Collection</node>
+    <node x="396.0" y="2183.0">navigator.go_to_zone_state.GoToZoneState</node>
+    <node x="3119.5" y="0.0">object</node>
+    <node x="2330.9028706800445" y="1366.0">plotter.plotter.Plotter</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="enum.Enum" target="object">
+      <point x="0.0" y="-213.0" />
+      <point x="4467.7362040133785" y="576.0" />
+      <point x="3306.076923076923" y="576.0" />
+      <point x="71.07692307692287" y="268.0" />
+    </edge>
+    <edge source="zones.zones.Collection" target="enum.Enum">
+      <point x="0.0" y="-60.0" />
+      <point x="4365.7362040133785" y="1341.0" />
+      <point x="4387.9862040133785" y="1341.0" />
+      <point x="-79.75" y="213.0" />
+    </edge>
+    <edge source="abc.ABC" target="object">
+      <point x="0.0" y="-26.0" />
+      <point x="578.2362040133783" y="556.0" />
+      <point x="3128.3846153846152" y="556.0" />
+      <point x="-106.61538461538476" y="268.0" />
+    </edge>
+    <edge source="zones.zones.Zones" target="object">
+      <point x="0.0" y="-213.0" />
+      <point x="2906.7362040133785" y="606.0" />
+      <point x="3217.230769230769" y="606.0" />
+      <point x="-17.769230769230944" y="268.0" />
+    </edge>
+    <edge source="scanner.beacon.BLEBeacon" target="object">
+      <point x="0.0" y="-180.0" />
+      <point x="3576.7362040133785" y="606.0" />
+      <point x="3252.769230769231" y="606.0" />
+      <point x="17.769230769230944" y="268.0" />
+    </edge>
+    <edge source="navigator.search_ball_state.SearchBallState" target="navigator.navigator_state.NavigatorState">
+      <point x="0.0" y="-49.0" />
+      <point x="956.0" y="2103.0" />
+      <point x="695.5695373467113" y="2103.0" />
+      <point x="117.33333333333326" y="103.0" />
+    </edge>
+    <edge source="detector.Model.Model" target="object">
+      <point x="0.0" y="-345.0" />
+      <point x="1049.2362040133783" y="576.0" />
+      <point x="3163.923076923077" y="576.0" />
+      <point x="-71.07692307692287" y="268.0" />
+    </edge>
+    <edge source="plotter.plotter.Plotter" target="threading.Thread">
+      <point x="0.0" y="-356.0" />
+      <point x="2438.9028706800445" y="1341.0" />
+      <point x="2524.5695373467115" y="1341.0" />
+      <point x="431.33333333333303" y="191.0" />
+    </edge>
+    <edge source="detector.ObjectDetector.ObjectDetector" target="object">
+      <point x="0.0" y="-301.0" />
+      <point x="3241.2362040133785" y="606.0" />
+      <point x="3235.0" y="606.0" />
+      <point x="0.0" y="268.0" />
+    </edge>
+    <edge source="threading.Thread" target="object">
+      <point x="0.0" y="-191.0" />
+      <point x="2093.2362040133785" y="596.0" />
+      <point x="3199.4615384615386" y="596.0" />
+      <point x="-35.53846153846143" y="268.0" />
+    </edge>
+    <edge source="navigator.go_to_zone_state.GoToZoneState" target="navigator.navigator_state.NavigatorState">
+      <point x="0.0" y="-224.0" />
+      <point x="572.0" y="2103.0" />
+      <point x="578.236204013378" y="2103.0" />
+      <point x="0.0" y="103.0" />
+    </edge>
+    <edge source="navigator.navigator.Navigator" target="object">
+      <point x="0.0" y="-169.0" />
+      <point x="3878.2362040133785" y="596.0" />
+      <point x="3270.5384615384614" y="596.0" />
+      <point x="35.53846153846143" y="268.0" />
+    </edge>
+    <edge source="detector.FrameRate.FrameRate" target="object">
+      <point x="0.0" y="-125.0" />
+      <point x="770.2362040133783" y="566.0" />
+      <point x="3146.153846153846" y="566.0" />
+      <point x="-88.84615384615381" y="268.0" />
+    </edge>
+    <edge source="zumo.zumo.Zumo" target="object">
+      <point x="0.0" y="-92.0" />
+      <point x="1313.2362040133783" y="586.0" />
+      <point x="3181.6923076923076" y="586.0" />
+      <point x="-53.30769230769238" y="268.0" />
+    </edge>
+    <edge source="navigator.return_ball_state.ReturnBallState" target="navigator.navigator_state.NavigatorState">
+      <point x="0.0" y="-279.0" />
+      <point x="188.0" y="2103.0" />
+      <point x="460.90287068004454" y="2103.0" />
+      <point x="-117.33333333333331" y="103.0" />
+    </edge>
+    <edge source="webserver.webserver.Webserver" target="threading.Thread">
+      <point x="0.0" y="-103.0" />
+      <point x="2092.194955406912" y="1341.0" />
+      <point x="2093.2362040133785" y="1341.0" />
+      <point x="0.0" y="191.0" />
+    </edge>
+    <edge source="scanner.scanner.BLEScanner" target="object">
+      <point x="0.0" y="-202.0" />
+      <point x="5105.236204013378" y="556.0" />
+      <point x="3341.6153846153848" y="556.0" />
+      <point x="106.61538461538476" y="268.0" />
+    </edge>
+    <edge source="zones.zones.Zone" target="enum.Enum">
+      <point x="0.0" y="-104.0" />
+      <point x="4569.7362040133785" y="1341.0" />
+      <point x="4547.4862040133785" y="1341.0" />
+      <point x="79.75" y="213.0" />
+    </edge>
+    <edge source="navigator.navigator_state.NavigatorState" target="abc.ABC">
+      <point x="0.0" y="-103.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="detector.VideoStream.VideoStream" target="object">
+      <point x="0.0" y="-136.0" />
+      <point x="4791.236204013378" y="566.0" />
+      <point x="3323.846153846154" y="566.0" />
+      <point x="88.84615384615381" y="268.0" />
+    </edge>
+    <edge source="detector.Detection.Detection" target="object">
+      <point x="0.0" y="-158.0" />
+      <point x="4160.2362040133785" y="586.0" />
+      <point x="3288.3076923076924" y="586.0" />
+      <point x="53.30769230769238" y="268.0" />
+    </edge>
+    <edge source="detector.detector.Detector" target="threading.Thread">
+      <point x="0.0" y="-334.0" />
+      <point x="1763.7547380156075" y="1341.0" />
+      <point x="1661.902870680045" y="1341.0" />
+      <point x="-431.33333333333326" y="191.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.27615617892342686" x="2627.9999999999995" y="1343.0" />
+  <SelectedNodes>
+    <node>object</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Methods</Category>
+    <Category>Inner Classes</Category>
+    <Category>Fields</Category>
+  </Categories>
+</Diagram>
+

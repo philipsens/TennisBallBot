@@ -1,30 +1,42 @@
-from scanner.ble_scanner import BLEScanner
-from scanner.ble_plotter import BLEPlotter
+from scanner.scanner import BLEScanner
+from plotter.plotter import Plotter
 from zumo.zumo import Zumo
-from main_thread.main_thread_queue import MainThreadQueue
+from webserver.webserver import Webserver
+from zones.zones import Zones
+from detector.detector import Detector
+from navigator.navigator import Navigator
+from navigator.return_ball_state import ReturnBallState
+from navigator.search_ball_state import SearchBallState
+from navigator.go_to_zone_state import GoToZoneState
+
+import time
 
 if __name__ == '__main__':
-    print("Starting TennisBallBot 🤖")
-
-    queue = MainThreadQueue()
+    print("Starting TennisBallBot 🎾🤖")
 
     zumo = Zumo("/dev/ttyACM0")
     scanner = BLEScanner("00000000-0000-0000-0000-000000000000")
-    plotter = BLEPlotter(scanner)
+    detector = Detector(zumo)
+    webserver = Webserver("0.0.0.0")
+    zones = Zones(webserver, scanner)
+
+    navigator = Navigator(scanner, detector, zones, zumo)
+    plotter = Plotter(scanner, zones)
 
     try:
-        zumo.start()
         plotter.start()
         scanner.start()
+        detector.start()
+        webserver.start()
 
-        zumo.add("left", 0) # max value = 400
-        zumo.add("right", 0) # max value = 400
-        zumo.add("honk", 0) # value is ignored
+        navigator.transition_to(SearchBallState())
 
         while True:
-            queue.execute()
+            navigator.update()
 
     except KeyboardInterrupt:
-        zumo.stop()
+        zumo.run('stop')
         plotter.stop()
         scanner.stop()
+        detector.stop()
+        webserver.stop()
