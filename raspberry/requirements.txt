@@ -7,7 +7,7 @@ construct==2.9.52
 cryptography==2.6.1
 entrypoints==0.3
 Flask==1.1.2
-Flask-Cors==3.0.8
+Flask-Cors==3.0.9
 idna==2.6
 itsdangerous==1.1.0
 Jinja2==2.11.2
