@@ -15,7 +15,7 @@ keyring==17.1.1
 keyrings.alt==3.1.1
 MarkupSafe==1.1.1
 numpy==1.16.2
-opencv-python==3.4.6.27
+opencv-python==3.4.7.28
 picamera==1.13
 PyBluez==0.23
 pycrypto==2.6.1
