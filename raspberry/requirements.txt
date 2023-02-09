@@ -29,6 +29,6 @@ SecretStorage==2.3.1
 simple-pid==0.2.4
 six==1.12.0
 ssh-import-id==5.7
-tflite-runtime==2.1.0.post1
+tflite-runtime==2.7.0
 urllib3==1.24.2
 Werkzeug==1.0.1
